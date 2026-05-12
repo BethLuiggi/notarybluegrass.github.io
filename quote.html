@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Get a Quote | Bluegrass Notary LLC</title>
+<meta name="description" content="Get an instant printable quote for mobile notary signing services in Elizabethtown, Kentucky and surrounding counties."/>
+<meta name="robots" content="index, follow"/>
+<link rel="canonical" href="https://bluegrass-notary.com/quote.html"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="styles.css"/>
+<style>
+.q-wrap{max-width:820px;margin:0 auto;padding:2.5rem 2rem 4rem;}
+.q-wrap h1{font-family:'Playfair Display',serif;color:var(--navy);font-size:clamp(1.8rem,3.2vw,2.4rem);font-weight:700;line-height:1.2;margin-bottom:.4rem;}
+.q-wrap .lead{color:var(--gray);font-size:1rem;line-height:1.6;margin-bottom:2rem;}
+.back-link{display:inline-block;margin-bottom:1.5rem;padding:.45rem 1.1rem;background:var(--navy);color:#fff;border-radius:4px;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;text-decoration:none;}
+.back-link:hover{background:#253660;}
+.mode-tabs{display:flex;gap:0;margin-bottom:1.5rem;border:1px solid var(--gold);border-radius:6px;overflow:hidden;}
+.mode-tab{flex:1;padding:.85rem 1rem;background:#fff;border:none;cursor:pointer;font-family:'Lato',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--navy);transition:all .2s;}
+.mode-tab.active{background:var(--gold);color:var(--navy);}
+.mode-tab:hover:not(.active){background:rgba(201,168,76,.1);}
+.q-form{background:#fff;border:1px solid var(--lg);border-radius:8px;padding:1.75rem;margin-bottom:1.5rem;}
+.q-form h2{font-family:'Playfair Display',serif;color:var(--navy);font-size:1.1rem;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:2px solid var(--lg);}
+.q-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.actions{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;}
+.actions .btn{flex:1;min-width:200px;}
+#quote-output{display:none;background:#fff;border:2px solid var(--navy);border-radius:8px;padding:2.5rem 2rem;margin-top:2rem;}
+.quote-doc-hdr{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid var(--gold);padding-bottom:1.25rem;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;}
+.quote-doc-hdr .biz-name{font-family:'Playfair Display',serif;color:var(--navy);font-size:1.6rem;font-weight:700;line-height:1.1;}
+.quote-doc-hdr .biz-name span{color:var(--gold);}
+.quote-doc-hdr .biz-sub{font-size:.82rem;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;font-weight:700;margin-top:.25rem;}
+.quote-doc-hdr .biz-addr{font-size:.82rem;color:var(--navy);line-height:1.6;margin-top:.6rem;}
+.quote-doc-hdr .meta{text-align:right;font-size:.85rem;color:var(--navy);line-height:1.6;}
+.quote-doc-hdr .meta strong{color:var(--gold);}
+.quote-prepared{background:rgba(201,168,76,.06);border-left:3px solid var(--gold);padding:.9rem 1.1rem;border-radius:4px;margin-bottom:1.5rem;font-size:.9rem;color:var(--navy);line-height:1.5;}
+.quote-prepared strong{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gray);font-weight:700;display:block;margin-bottom:.2rem;}
+.quote-section{margin-bottom:1.5rem;}
+.quote-section h3{font-family:'Playfair Display',serif;color:var(--navy);font-size:.95rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.6rem;border-bottom:1px solid var(--lg);padding-bottom:.35rem;}
+.quote-section .row{display:flex;justify-content:space-between;padding:.35rem 0;font-size:.92rem;color:var(--navy);border-bottom:1px solid var(--lg);}
+.quote-section .row:last-child{border-bottom:none;}
+.quote-section .row span:first-child{color:var(--gray);}
+.quote-section .row span:last-child{font-weight:700;font-family:'Playfair Display',serif;}
+.quote-total{background:var(--navy);color:#fff;padding:1rem 1.25rem;border-radius:6px;display:flex;justify-content:space-between;align-items:baseline;margin-top:1rem;}
+.quote-total .lbl{font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;}
+.quote-total .val{font-family:'Playfair Display',serif;color:var(--gold);font-size:2rem;font-weight:700;}
+.quote-footnote{font-size:.78rem;color:var(--gray);line-height:1.6;margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--lg);}
+.quote-cta{margin-top:1.25rem;padding:1rem;background:rgba(201,168,76,.08);border:1px dashed var(--gold);border-radius:6px;text-align:center;font-size:.88rem;color:var(--navy);font-weight:700;}
+.quote-cta a{color:var(--gold);text-decoration:none;}
+@media print{
+  header, nav, .back-link, .mode-tabs, .q-form, .actions, .post-print-actions, footer { display: none !important; }
+  body{background:#fff!important;}
+  #quote-output{display:block!important;border:none!important;box-shadow:none!important;padding:0!important;margin:0!important;}
+  .q-wrap{padding:0!important;max-width:none!important;}
+  .quote-doc-hdr{page-break-inside:avoid;}
+  .quote-total{break-inside:avoid;}
+  @page{margin:.6in;}
+}
+@media(max-width:600px){
+  .q-row{grid-template-columns:1fr;}
+  .quote-doc-hdr{flex-direction:column;}
+  .quote-doc-hdr .meta{text-align:left;}
+}
+</style>
+</head>
+<body>
+
+<header style="background:var(--navy);padding:1.25rem 2rem;text-align:center;">
+  <a href="index.html" style="font-family:'Playfair Display',serif;color:#fff;font-size:1.4rem;font-weight:700;text-decoration:none;">Bluegrass <span style="color:var(--gold);">Notary</span> LLC</a>
+</header>
+
+<main class="q-wrap">
+  <a href="index.html" class="back-link">&larr; Back to Home</a>
+
+  <h1>Get a Printable Quote</h1>
+  <p class="lead">Pick a quote type, fill in your details, and click <strong>Generate Quote</strong>. You can print or save it directly from your browser.</p>
+
+  <div class="mode-tabs">
+    <button class="mode-tab active" id="tab-standard" type="button">Standard Quote</button>
+    <button class="mode-tab" id="tab-title" type="button">Title Company Quote</button>
+  </div>
+
+  <!-- STANDARD MODE FORM -->
+  <div class="q-form" id="form-standard">
+    <h2>Standard Mobile Notary Signing</h2>
+
+    <div class="q-row">
+      <div class="bg"><label class="bl">Your Name (or Company)</label>
+        <input class="bi" type="text" id="qName" placeholder="(optional)"/></div>
+      <div class="bg"><label class="bl">Anticipated Signing Date</label>
+        <input class="bi" type="date" id="qDate"/></div>
+    </div>
+
+    <div class="bg"><label class="bl">Who Prints the Documents? <span style="color:#e53e3e;">*</span></label>
+      <select class="bsel" id="qPrints">
+        <option value="notary">Notary prints</option>
+        <option value="customer">I will print myself (save $10)</option>
+      </select>
+    </div>
+
+    <div class="bg"><label class="bl">Package Size <span style="color:#e53e3e;">*</span></label>
+      <select class="bsel" id="qPackage">
+        <option value="1-5">1&ndash;5 pages</option>
+        <option value="6-25">6&ndash;25 pages</option>
+        <option value="26-100">26&ndash;100 pages</option>
+        <option value="101-130">101&ndash;130 pages</option>
+        <option value="131-150">131&ndash;150 pages</option>
+        <option value="reverse">Reverse Mortgage</option>
+        <option value="151+">151+ pages</option>
+      </select>
+    </div>
+
+    <div id="qExtraPagesWrap" style="display:none;">
+      <div class="bg"><label class="bl">Total page count (for 151+)</label>
+        <input class="bi" type="number" id="qExtraPages" min="151" placeholder="e.g. 175"/></div>
+    </div>
+
+    <div class="q-row">
+      <div class="bg"><label class="bl">Number of Signers</label>
+        <select class="bsel" id="qSigners">
+          <option value="1">1 (included)</option>
+          <option value="2" selected>2 (included)</option>
+          <option value="3">3 (+$25)</option>
+          <option value="4">4 (+$50)</option>
+          <option value="5">5 (+$75)</option>
+          <option value="6">6 (+$100)</option>
+        </select>
+      </div>
+      <div class="bg"><label class="bl">Witness Needed?</label>
+        <select class="bsel" id="qWitness">
+          <option value="0">No</option>
+          <option value="1">Yes (+$50)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="q-row">
+      <div class="bg"><label class="bl">County</label>
+        <select class="bsel" id="qCounty">
+          <option value="Hardin">Hardin (no travel fee)</option>
+          <option value="LaRue">LaRue</option>
+          <option value="Nelson">Nelson</option>
+          <option value="Hart">Hart</option>
+          <option value="Grayson">Grayson</option>
+          <option value="Washington">Washington</option>
+          <option value="Bullitt">Bullitt</option>
+          <option value="Green">Green</option>
+          <option value="Marion">Marion</option>
+          <option value="Taylor">Taylor</option>
+          <option value="Meade">Meade</option>
+          <option value="Edmonson">Edmonson</option>
+          <option value="Breckinridge">Breckinridge</option>
+          <option value="Ohio">Ohio</option>
+          <option value="Butler">Butler</option>
+          <option value="Jefferson">Jefferson</option>
+          <option value="Spencer">Spencer</option>
+          <option value="Hancock">Hancock</option>
+          <option value="Daviess">Daviess</option>
+        </select>
+      </div>
+      <div class="bg"><label class="bl">After-Hours or Holiday?</label>
+        <select class="bsel" id="qAfterHours">
+          <option value="0">No</option>
+          <option value="25">After-hours (8PM&ndash;8AM): +$25</option>
+          <option value="35">Federal holiday: +$35</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- TITLE COMPANY MODE FORM -->
+  <div class="q-form" id="form-title" style="display:none;">
+    <h2>Title Company Quote (Pre-Negotiated Rates)</h2>
+
+    <div class="q-row">
+      <div class="bg"><label class="bl">Title Company Name</label>
+        <input class="bi" type="text" id="qTCName" placeholder="(optional)"/></div>
+      <div class="bg"><label class="bl">Booker Contact</label>
+        <input class="bi" type="text" id="qTCContact" placeholder="(optional)"/></div>
+    </div>
+
+    <div class="bg"><label class="bl">Promo Code <span style="color:#e53e3e;">*</span></label>
+      <select class="bsel" id="qTCPromo">
+        <option value="TITLEME">TITLEME</option>
+        <option value="TITLECO">TITLECO</option>
+      </select>
+    </div>
+
+    <div class="bg"><label class="bl">Signing Location <span style="color:#e53e3e;">*</span></label>
+      <select class="bsel" id="qTCLoc">
+        <option value="in-office">In our office (Hardin County) &mdash; $75</option>
+        <option value="mobile">Mobile / other location</option>
+      </select>
+    </div>
+
+    <div id="qTCCountyWrap" style="display:none;">
+      <div class="bg"><label class="bl">County (Kentucky) <span style="color:#e53e3e;">*</span></label>
+        <select class="bsel" id="qTCCounty">
+          <option value="">-- Select county --</option>
+          <option value="Hardin">Hardin ($125)</option>
+          <option value="Jefferson">Jefferson</option>
+          <option value="Bullitt">Bullitt</option>
+          <option value="Nelson">Nelson</option>
+          <option value="LaRue">LaRue</option>
+          <option value="Hart">Hart</option>
+          <option value="Grayson">Grayson</option>
+          <option value="Breckinridge">Breckinridge</option>
+          <option value="Meade">Meade</option>
+          <option value="Hancock">Hancock</option>
+          <option value="Daviess">Daviess</option>
+          <option value="Ohio">Ohio</option>
+          <option value="Butler">Butler</option>
+          <option value="Green">Green</option>
+          <option value="Taylor">Taylor</option>
+          <option value="Marion">Marion</option>
+          <option value="Washington">Washington</option>
+          <option value="Spencer">Spencer</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="bg"><label class="bl">Anticipated Signing Date</label>
+      <input class="bi" type="date" id="qTCDate"/></div>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-gold" id="btnGenerate" type="button">Generate Quote</button>
+    <button class="btn btn-navy" id="btnClear" type="button">Clear</button>
+  </div>
+
+  <!-- GENERATED QUOTE OUTPUT -->
+  <div id="quote-output">
+    <div class="quote-doc-hdr">
+      <div>
+        <div class="biz-name">Bluegrass <span>Notary</span> LLC</div>
+        <div class="biz-sub">Kentucky Mobile Notary Services</div>
+        <div class="biz-addr">124 McCormack Ave<br/>Elizabethtown, KY 42701<br/>(270) 308-0260<br/>bluegrass-notary.com</div>
+      </div>
+      <div class="meta">
+        <div><strong>QUOTE</strong></div>
+        <div id="qNum" style="margin-top:.25rem;"></div>
+        <div id="qDateOut" style="margin-top:.25rem;"></div>
+        <div style="margin-top:.5rem;font-size:.78rem;color:var(--gray);">Valid for 30 days</div>
+      </div>
+    </div>
+
+    <div class="quote-prepared" id="qPrepared"></div>
+
+    <div class="quote-section">
+      <h3>Service Details</h3>
+      <div id="qDetails"></div>
+    </div>
+
+    <div class="quote-section">
+      <h3>Fee Breakdown</h3>
+      <div id="qFees"></div>
+    </div>
+
+    <div class="quote-total">
+      <span class="lbl">Total (Estimate)</span>
+      <span class="val" id="qTotal">$0</span>
+    </div>
+
+    <div class="quote-footnote" id="qFootnote"></div>
+
+    <div class="quote-cta">
+      Ready to book? Visit <a href="https://bluegrass-notary.com">bluegrass-notary.com</a> or call <a href="tel:2703080260">(270) 308-0260</a>.
+    </div>
+  </div>
+
+  <div class="actions post-print-actions" id="postPrintActions" style="display:none;">
+    <button class="btn btn-gold" id="btnPrint" type="button">🖨 Print Quote</button>
+    <button class="btn btn-navy" id="btnEdit" type="button">&larr; Edit Quote</button>
+  </div>
+
+  <a href="index.html" class="back-link" style="margin-top:2rem;">&larr; Back to Home</a>
+</main>
+
+<footer>
+  <p>&copy; 2026 Bluegrass-Notary.com &middot; Kentucky Licensed Notary Signing Agents</p>
+  <p style="margin-top:.4rem"><a href="index.html">Home</a> &middot; <a href="privacy.html">Privacy Policy</a></p>
+</footer>
+
+<script>
+// Pricing constants (mirror of script.js — keep in sync if rates change)
+var PKGS_NOTARY={'1-5':[50,'1-5 pages'],'6-25':[80,'6-25 pages'],'26-100':[120,'26-100 pages'],'101-130':[140,'101-130 pages'],'131-150':[150,'131-150 pages'],'reverse':[200,'Reverse Mortgage'],'151+':[150,'151+ pages (base)']};
+var PKGS_CUSTOMER={'1-5':[40,'1-5 pages'],'6-25':[70,'6-25 pages'],'26-100':[110,'26-100 pages'],'101-130':[130,'101-130 pages'],'131-150':[140,'131-150 pages'],'reverse':[190,'Reverse Mortgage'],'151+':[140,'151+ pages (base)']};
+// Approximate one-way miles from Elizabethtown to each county seat (for travel-fee estimation)
+var COUNTY_MILES={Hardin:0,LaRue:16,Nelson:25,Hart:30,Grayson:30,Washington:30,Bullitt:30,Green:35,Marion:35,Taylor:35,Meade:35,Edmonson:40,Breckinridge:40,Ohio:40,Butler:45,Jefferson:45,Spencer:50,Hancock:55,Daviess:60};
+var TITLE_FEE_TIER1=['Hardin'];
+var TITLE_FEE_TIER2=['Jefferson','Bullitt','Nelson','LaRue','Hart','Grayson','Breckinridge','Meade'];
+var TITLE_FEE_TIER3=['Hancock','Daviess','Ohio','Butler','Green','Taylor','Marion','Washington','Spencer'];
+function calcTitleFee(promo,locType,county){
+  if(locType==='in-office') return 75;
+  if(locType!=='mobile'||!county) return null;
+  if(TITLE_FEE_TIER1.indexOf(county)>=0) return 125;
+  if(TITLE_FEE_TIER2.indexOf(county)>=0) return 150;
+  if(TITLE_FEE_TIER3.indexOf(county)>=0) return promo==='TITLECO'?200:175;
+  return null;
+}
+
+var mode='standard';
+function setMode(m){
+  mode=m;
+  document.getElementById('tab-standard').classList.toggle('active',m==='standard');
+  document.getElementById('tab-title').classList.toggle('active',m==='title');
+  document.getElementById('form-standard').style.display=(m==='standard')?'block':'none';
+  document.getElementById('form-title').style.display=(m==='title')?'block':'none';
+}
+document.getElementById('tab-standard').addEventListener('click',function(){setMode('standard');});
+document.getElementById('tab-title').addEventListener('click',function(){setMode('title');});
+
+document.getElementById('qPackage').addEventListener('change',function(){
+  document.getElementById('qExtraPagesWrap').style.display=this.value==='151+'?'block':'none';
+});
+document.getElementById('qTCLoc').addEventListener('change',function(){
+  document.getElementById('qTCCountyWrap').style.display=this.value==='mobile'?'block':'none';
+});
+
+function fmtUSD(n){ return '$'+n.toFixed(2); }
+function el(id){ return document.getElementById(id); }
+function row(label,val){ return '<div class="row"><span>'+label+'</span><span>'+val+'</span></div>'; }
+
+function todayISO(){
+  var d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function quoteNum(){
+  var d=new Date();
+  return 'Q-'+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'-'+String(d.getHours()).padStart(2,'0')+String(d.getMinutes()).padStart(2,'0');
+}
+function fmtDate(s){
+  if(!s) return '';
+  var d=new Date(s+'T12:00:00');
+  return d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+}
+
+function generateStandard(){
+  var name=el('qName').value.trim()||'(prospective customer)';
+  var date=el('qDate').value;
+  var prints=el('qPrints').value;
+  var pkgKey=el('qPackage').value;
+  var pkgs=prints==='notary'?PKGS_NOTARY:PKGS_CUSTOMER;
+  var pkg=pkgs[pkgKey];
+  var pkgFee=pkg[0]; var pkgLabel=pkg[1];
+  var extraFee=0, extraNote='';
+  if(pkgKey==='151+'){
+    var total=parseInt(el('qExtraPages').value)||151;
+    if(total>150){
+      extraFee=Math.round((total-150)*0.5*100)/100;
+      extraNote='Extra pages over 150 ('+(total-150)+' × $0.50)';
+    }
+  }
+  var signers=parseInt(el('qSigners').value);
+  var sigFee=signers>2?(signers-2)*25:0;
+  var witFee=parseInt(el('qWitness').value)?50:0;
+  var county=el('qCounty').value;
+  var miles=COUNTY_MILES[county]||0;
+  var travelFee=miles>25?(miles-25)*2:0;
+  var ahFee=parseInt(el('qAfterHours').value)||0;
+  var total=pkgFee+extraFee+sigFee+witFee+travelFee+ahFee;
+
+  el('qNum').textContent=quoteNum();
+  el('qDateOut').textContent=fmtDate(todayISO());
+  el('qPrepared').innerHTML='<strong>Prepared for</strong>'+name+(date?' &mdash; '+fmtDate(date):'');
+
+  var details='';
+  details+=row('Service type','Standard Mobile Notary Signing');
+  details+=row('Package','Package — '+pkgLabel+(prints==='notary'?' (Notary prints)':' (Customer prints — $10 less)'));
+  details+=row('Number of signers',signers.toString());
+  if(witFee>0) details+=row('Witness','Notary to provide a witness');
+  details+=row('Location',county+' County, Kentucky');
+  if(ahFee>0) details+=row('Timing',ahFee===35?'Federal holiday':'After-hours (8 PM – 8 AM)');
+  if(date) details+=row('Anticipated date',fmtDate(date));
+  el('qDetails').innerHTML=details;
+
+  var fees='';
+  fees+=row(pkgLabel+(prints==='customer'?' (you provide prints)':''),fmtUSD(pkgFee));
+  if(extraFee>0) fees+=row(extraNote,fmtUSD(extraFee));
+  if(sigFee>0) fees+=row((signers-2)+' extra signer'+(signers-2>1?'s':'')+' × $25',fmtUSD(sigFee));
+  if(witFee>0) fees+=row('Witness fee',fmtUSD(witFee));
+  if(travelFee>0) fees+=row('Travel fee — approximate ('+miles+' mi to '+county+' county seat, '+(miles-25)+' mi over 25 × $2)',fmtUSD(travelFee));
+  else fees+=row('Travel fee ('+county+' — within 25 mi of Elizabethtown)','$0.00');
+  if(ahFee>0) fees+=row(ahFee===35?'Holiday surcharge':'After-hours surcharge',fmtUSD(ahFee));
+  el('qFees').innerHTML=fees;
+
+  el('qTotal').textContent=fmtUSD(total);
+  el('qFootnote').innerHTML='<strong>Notes:</strong> Travel fee shown is an approximate based on driving distance to the county seat; exact fee is calculated at booking based on the precise signing address. Reverse mortgages and signings with more than 150 pages may incur additional fees. Quote valid for 30 days from date issued.';
+}
+
+function generateTitle(){
+  var name=el('qTCName').value.trim()||'(title company)';
+  var contact=el('qTCContact').value.trim();
+  var date=el('qTCDate').value;
+  var promo=el('qTCPromo').value;
+  var locType=el('qTCLoc').value;
+  var county=locType==='mobile'?el('qTCCounty').value:'Hardin';
+  if(locType==='mobile' && !county){
+    alert('Please select a Kentucky county for mobile signings.');
+    return false;
+  }
+  var fee=calcTitleFee(promo,locType,county);
+  if(!fee){
+    alert('Could not determine the fee. Please re-check your selections.');
+    return false;
+  }
+
+  el('qNum').textContent=quoteNum();
+  el('qDateOut').textContent=fmtDate(todayISO());
+  el('qPrepared').innerHTML='<strong>Prepared for</strong>'+name+(contact?' &mdash; '+contact:'')+(date?'<br/>Anticipated signing: '+fmtDate(date):'');
+
+  var details='';
+  details+=row('Service type','Title Company Signing');
+  details+=row('Promo code','['+promo+'] (pre-negotiated rate)');
+  details+=row('Signing location',locType==='in-office'?'In our office (Hardin County)':'Mobile / on-site');
+  if(locType==='mobile') details+=row('County',county+' County, Kentucky');
+  if(date) details+=row('Anticipated date',fmtDate(date));
+  el('qDetails').innerHTML=details;
+
+  var feeLabel=locType==='in-office'?'In-office closing (flat)':'Mobile signing — '+county+' County';
+  var fees=row(feeLabel,fmtUSD(fee));
+  el('qFees').innerHTML=fees;
+
+  el('qTotal').textContent=fmtUSD(fee);
+  el('qFootnote').innerHTML='<strong>Notes:</strong> Pre-negotiated flat rate per promo code agreement. Fee includes notary signing services and reasonable travel within the listed Kentucky counties served. Quote valid for 30 days from date issued.';
+  return true;
+}
+
+document.getElementById('btnGenerate').addEventListener('click',function(){
+  var ok=mode==='standard'?(generateStandard(),true):generateTitle();
+  if(ok!==false){
+    document.getElementById('quote-output').style.display='block';
+    document.getElementById('postPrintActions').style.display='flex';
+    document.getElementById('quote-output').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+});
+
+document.getElementById('btnClear').addEventListener('click',function(){
+  if(!confirm('Clear the form and start over?')) return;
+  document.querySelectorAll('.q-form input, .q-form select').forEach(function(f){
+    if(f.tagName==='SELECT') f.selectedIndex=0; else f.value='';
+  });
+  document.getElementById('qSigners').value='2';
+  document.getElementById('quote-output').style.display='none';
+  document.getElementById('postPrintActions').style.display='none';
+});
+
+document.getElementById('btnPrint').addEventListener('click',function(){
+  window.print();
+});
+
+document.getElementById('btnEdit').addEventListener('click',function(){
+  document.getElementById('quote-output').style.display='none';
+  document.getElementById('postPrintActions').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+</script>
+</body>
+</html>
