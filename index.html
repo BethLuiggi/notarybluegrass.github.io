@@ -103,9 +103,9 @@
     {"@type":"Question","name":"Where can I find a mobile notary near me in Elizabethtown or Hardin County?","acceptedAnswer":{"@type":"Answer","text":"Bluegrass Notary LLC is a mobile notary service based in Elizabethtown, Kentucky. We travel to your home, office, hospital, care facility, or other signing location throughout Hardin County and surrounding counties — typically same-day or next-day. Call (270) 308-0260 or book online."}},
     {"@type":"Question","name":"How quickly can a mobile notary come to my home or office in Elizabethtown?","acceptedAnswer":{"@type":"Answer","text":"Same-day and next-day appointments are usually available throughout Hardin County. Call or book online — we'll confirm within minutes."}},
     {"@type":"Question","name":"What documents can you notarize?","acceptedAnswer":{"@type":"Answer","text":"We handle loan signings, real estate closings, reverse mortgages, powers of attorney, wills, trusts, affidavits, vehicle titles, and most other general notarizations. If you're unsure whether we can help, just ask."}},
-    {"@type":"Question","name":"Do you serve areas outside Hardin County?","acceptedAnswer":{"@type":"Answer","text":"Yes — we serve all of Kentucky, with no distance limit. We travel most frequently to Bullitt, Nelson, LaRue, Hart, Grayson, Breckinridge, Meade, Jefferson, Spencer, Marion, Taylor, Green, Edmonson, Butler, Ohio, Daviess, Hancock, and Washington counties. The first 20 miles from 42701 are included; past 20 miles, travel is $2 per mile."}},
+    {"@type":"Question","name":"Do you serve areas outside Hardin County?","acceptedAnswer":{"@type":"Answer","text":"Yes — we serve all of Kentucky, with no distance limit. We travel most frequently to Bullitt, Nelson, LaRue, Hart, Grayson, Breckinridge, Meade, Jefferson, Spencer, Marion, Taylor, Green, Edmonson, Butler, Ohio, Daviess, Hancock, and Washington counties. $40.00 within 10 miles, plus $2.50 per mile thereafter."}},
     {"@type":"Question","name":"Do you offer bilingual (Spanish) notary services?","acceptedAnswer":{"@type":"Answer","text":"Yes. Luiggi is fully fluent in Spanish and can assist Spanish-speaking clients throughout the signing process — explaining documents clearly in their preferred language."}},
-    {"@type":"Question","name":"What if I need a notary after business hours or on a holiday?","acceptedAnswer":{"@type":"Answer","text":"We're available Monday through Saturday including evenings; we are closed on Sundays. An after-hours surcharge of $25 applies for appointments between 8 PM and 8 AM. A $35 holiday surcharge applies on federal holidays."}}
+    {"@type":"Question","name":"What if I need a notary after business hours or on a holiday?","acceptedAnswer":{"@type":"Answer","text":"We're available for appointments between 7:00 PM and 2:00 AM, on Sundays, and on federal holidays for a flat $25.00 surcharge."}}
   ]
 }
 </script>
@@ -253,36 +253,39 @@
 
   <!-- STEP 1: Who prints? -->
   <div class="step" id="s1">
-    <div class="step-title">Step <span>1 of 8</span> &mdash; Printing</div>
-    <p style="font-size:.9rem;color:var(--gray);margin-bottom:1rem;">Who will be printing the signing package?</p>
+    <div class="step-title">Step <span>1 of 8</span> &mdash; Package Type</div>
+    <p style="font-size:.9rem;color:var(--gray);margin-bottom:1rem;">Select the type of signing package.</p>
     <div id="s1options">
-      <div class="ro" id="ro-notary-prints">
-        <span class="ro-dot"></span>
-        <span>
-          <span class="ro-label">Notary Prints</span>
-          <span class="ro-sub">We handle all printing for you</span>
-        </span>
-      </div>
-      <div class="ro" id="ro-customer-prints">
-        <span class="ro-dot"></span>
-        <span>
-          <span class="ro-label">I Will Print</span>
-          <span class="ro-sub">Save $10 &mdash; you provide all copies</span>
-        </span>
-      </div>
+      <div class="ro s1opt" data-fee="40" data-label="Car Title"><span class="ro-dot"></span><span class="ro-label">Car Title</span><span class="ro-price">$40.00</span></div>
+      <div class="ro s1opt" data-fee="80" data-label="Seller Package"><span class="ro-dot"></span><span class="ro-label">Seller Package</span><span class="ro-price">$80.00</span></div>
+      <div class="ro s1opt" data-fee="100" data-label="Full Purchase"><span class="ro-dot"></span><span class="ro-label">Full Purchase</span><span class="ro-price">$100.00</span></div>
+      <div class="ro s1opt" data-fee="275" data-label="Reverse Mortgage"><span class="ro-dot"></span><span class="ro-label">Reverse Mortgage</span><span class="ro-price">$275.00</span></div>
+      <div class="ro s1opt" data-fee="150" data-label="Loan Application"><span class="ro-dot"></span><span class="ro-label">Loan Application</span><span class="ro-price">$150.00</span></div>
+      <div class="ro s1opt" data-fee="75" data-label="Cash Deal Mortgage Closings"><span class="ro-dot"></span><span class="ro-label">Cash Deal Mortgage Closings</span><span class="ro-price">$75.00</span></div>
+      <div class="ro s1opt" data-fee="50" data-label="Divorce / General Legal Documents / Power of Attorney, Affidavits, Wills"><span class="ro-dot"></span><span class="ro-label">Divorce / General Legal Documents / Power of Attorney, Affidavits, Wills</span><span class="ro-price">$50.00</span></div>
+      <div class="ro s1opt" data-fee="60" data-label="Apostille Needed for Foreign Documents"><span class="ro-dot"></span><span class="ro-label">Apostille Needed for Foreign Documents</span><span class="ro-price">$60.00</span></div>
     </div>
     <div class="snav"><button class="btn btn-gold" id="s1next">Next &rarr;</button></div>
   </div>
 
-  <!-- STEP 2: Package size -->
+  <!-- STEP 2: Add-on services -->
   <div class="step" id="s2">
-    <div class="step-title">Step <span>2 of 8</span> &mdash; Package Size</div>
-    <p class="bl" id="s2label">Select your package</p>
-    <div id="s2options"></div>
-    <div id="s2extra" style="display:none;margin-top:.75rem;">
-      <label class="bl">How many total pages do you have?</label>
-      <input class="bi" type="number" id="extraPages" min="151" placeholder="e.g. 175" />
-      <div id="extraResult" style="font-size:.82rem;color:var(--gold);margin-top:.4rem;min-height:1.2rem;"></div>
+    <div class="step-title">Step <span>2 of 8</span> &mdash; Add-On Services</div>
+    <p style="font-size:.9rem;color:var(--gray);margin-bottom:1rem;">Optional services &mdash; select any that apply.</p>
+    <label class="co" id="co-edocs">
+      <input type="checkbox" id="needsEdocs" />
+      <span><span class="co-label">Extra for EDOCS</span></span>
+      <span class="co-price">+$10</span>
+    </label>
+    <label class="co" id="co-scans">
+      <input type="checkbox" id="needsScans" />
+      <span><span class="co-label">Scans / Fax-backs / Copies / Print per set (up to 150 pages)</span></span>
+      <span class="co-price">+$25</span>
+    </label>
+    <div class="bg">
+      <label class="bl">Re-Draw Fee &mdash; number of documents needing a re-draw</label>
+      <input class="bi" type="number" id="redrawCount" min="0" value="0" placeholder="0" />
+      <div style="font-size:.78rem;color:var(--gray);margin-top:.3rem;">$25.00 per document.</div>
     </div>
     <div class="snav">
       <button class="btn btn-navy" id="s2back">&larr; Back</button>
@@ -293,7 +296,7 @@
   <!-- STEP 3: Double-sided copy (notary prints only) -->
   <div class="step" id="s3">
     <div class="step-title">Step <span>3 of 8</span> &mdash; Double-Sided Copy</div>
-    <p style="font-size:.9rem;color:var(--gray);margin-bottom:1rem;">Since we are printing your package, would you like us to leave a complimentary double-sided copy with the signer?</p>
+    <p style="font-size:.9rem;color:var(--gray);margin-bottom:1rem;">Would you like us to leave a complimentary double-sided copy with the signer?</p>
     <label class="co" id="co-dbl">
       <input type="checkbox" id="wantsDbl" />
       <span>
@@ -311,7 +314,7 @@
   <!-- STEP 4: Date & Time -->
   <div class="step" id="s4">
     <div class="step-title">Step <span>4 of 8</span> &mdash; Preferred Date &amp; Time</div>
-    <p style="font-size:.88rem;color:var(--gray);margin-bottom:1rem;">Business hours are <strong>8:00 AM &ndash; 8:00 PM, Monday through Saturday</strong>. We are <strong>closed Sundays</strong>. Times outside business hours carry an after-hours fee of <strong style="color:var(--gold);">+$25</strong>. Federal holidays carry a fee of <strong style="color:var(--gold);">+$35</strong>.</p>
+    <p style="font-size:.88rem;color:var(--gray);margin-bottom:1rem;">Business hours are <strong>8:00 AM &ndash; 8:00 PM, Monday through Saturday</strong>. Appointments between <strong>7:00 PM and 2:00 AM</strong>, on <strong>Sundays</strong>, or on <strong>federal holidays</strong> carry a flat surcharge of <strong style="color:var(--gold);">+$25</strong>.</p>
     <div class="bg">
       <label class="bl">Date</label>
       <input class="bi" type="date" id="prefDate" />
@@ -321,8 +324,8 @@
       <input class="bi" type="time" id="prefTime" />
     </div>
     <div id="ahAlert" style="display:none;" class="ah-alert">
-      <strong>&#9200; After-Hours / Holiday Selected</strong>
-      An additional fee applies (+$25 after-hours, +$35 holiday).
+      <strong>&#9200; After-Hours / Holiday / Sunday Selected</strong>
+      An additional $25 surcharge applies.
     </div>
     <div id="s4display" style="display:none;margin-top:.5rem;padding:.85rem 1rem;background:rgba(201,168,76,.1);border:1px solid var(--gold);border-radius:6px;font-size:.88rem;color:var(--navy);font-weight:700;"></div>
     <div class="snav">
@@ -343,12 +346,13 @@
       <input class="bi" type="tel" id="custPhone" placeholder="(000) 000-0000" /></div>
 
     <div class="bg">
-      <label class="bl">Witness needed?</label>
-      <label class="co" id="co-witness">
-        <input type="checkbox" id="needsWitness" />
-        <span><span class="co-label">Yes &mdash; notary to provide a witness</span></span>
-        <span class="co-price">+$50</span>
-      </label>
+      <label class="bl">Witnesses needed? ($50.00 each)</label>
+      <select class="bsel" id="witnessCount">
+        <option value="0" selected>0 &mdash; No witness needed</option>
+        <option value="1">1 witness (+$50.00)</option>
+        <option value="2">2 witnesses (+$100.00)</option>
+        <option value="3">3 witnesses (+$150.00)</option>
+      </select>
     </div>
 
     <div class="bg">
@@ -391,7 +395,7 @@
       </div>
       <button type="button" class="btn btn-navy" id="calcMilesBtn" style="margin-top:.75rem;padding:.6rem 1rem;font-size:.78rem;">Calculate Travel Fee</button>
       <div id="mileageResult" style="margin-top:.5rem;min-height:1.2rem;"></div>
-      <div style="font-size:.78rem;color:var(--gray);margin-top:.4rem;padding:.6rem .75rem;background:rgba(201,168,76,.08);border-radius:6px;">Within 20 miles of Elizabethtown: free. Beyond 20 miles: $2/mile.</div>
+      <div style="font-size:.78rem;color:var(--gray);margin-top:.4rem;padding:.6rem .75rem;background:rgba(201,168,76,.08);border-radius:6px;">$40.00 base fee (covers up to 10 miles) + $2.50/mile for each additional mile.</div>
     </div>
 
     <div class="bg">
@@ -523,7 +527,7 @@
           <option value="Woodford">Woodford</option>
         </optgroup>
       </select>
-      <p style="font-size:.75rem;color:var(--gray);margin-top:.4rem;">We travel anywhere in Kentucky. The first 20 miles are included; beyond that, travel is $2/mile and is calculated from your exact address in the next step.</p>
+      <p style="font-size:.75rem;color:var(--gray);margin-top:.4rem;">We travel anywhere in Kentucky. $40.00 base fee (covers up to 10 miles) + $2.50/mile for each additional mile, calculated from your exact address in the next step.</p>
     </div>
 
     <div class="bg">
@@ -559,8 +563,10 @@
     <div class="step-title">Step <span>6 of 8</span> &mdash; Policies &amp; Acknowledgment</div>
     <div id="s6invoice"></div>
     <div class="polbox">
-      <h4>1. Cancellations &amp; Fees</h4>
-      <p>Cancellations within less than 5 hours of scheduled time: 50% of fee charged. No-show or refusal to sign: full fee. Wait time: 15-min grace period, then $15 + $1/min. Re-draws due to lender error billed at signing rate.</p>
+      <h4>1. Travel, Wait Time &amp; Cancellations</h4>
+      <p><strong>Travel Policy:</strong> $40.00 base fee within 10 miles of our office; $2.50 per mile thereafter.</p>
+      <p><strong>Wait Time Policy:</strong> 15-minute grace period. At 15 minutes, a $15.00 fee is added, plus $1.00 per minute thereafter. Maximum wait time is 16 minutes without client contact before departure.</p>
+      <p><strong>Cancellation Policy:</strong> Cancellations up to 5 hours prior are free. Cancellations under 5 hours, client no-shows, or refusal to sign will be charged the full amount. Re-draws due to lender error are billed at $25.00 per document.</p>
       <h4>2. Identification</h4>
       <p>In most cases, signers must present a valid non-expired passport, driver&rsquo;s license, government-issued ID card, or other government-issued ID containing a signature and photograph. If unavailable, verification by oath of a credible witness personally appearing before the notary is an acceptable alternative.</p>
       <h4>3. Signatures</h4>
@@ -883,30 +889,31 @@
         <button class="tog green" id="ronInfoBtn"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5A3.375 3.375 0 0010.125 2.25H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>What Can Be Notarized Remotely</button>
         <button class="tog" id="bethFeeBtn"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>View Fee Schedule<svg class="ch" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg></button>
         <div class="wrap" id="bethFees"><div style="padding:1rem 0;">
-          <div class="fee-sec"><div class="fee-hd">Package &amp; Printing</div>
-            <div class="fee-row"><span>1&ndash;5 pages</span><span class="fp">$50</span></div>
-            <div class="fee-row"><span>6&ndash;25 pages</span><span class="fp">$80</span></div>
-            <div class="fee-row"><span>26&ndash;100 pages</span><span class="fp">$120</span></div>
-            <div class="fee-row"><span>101&ndash;130 pages</span><span class="fp">$140</span></div>
-            <div class="fee-row"><span>131&ndash;150 pages</span><span class="fp">$150</span></div>
-            <div class="fee-row"><span>151+ pages</span><span class="fp">$150 base + $0.50/pg over 150</span></div>
-            <div class="fee-row"><span>Reverse Mortgage</span><span class="fp">$200</span></div>
+          <div class="fee-sec"><div class="fee-hd">Package Type</div>
+            <div class="fee-row"><span>Car Title</span><span class="fp">$40.00</span></div>
+            <div class="fee-row"><span>Seller Package</span><span class="fp">$80.00</span></div>
+            <div class="fee-row"><span>Full Purchase</span><span class="fp">$100.00</span></div>
+            <div class="fee-row"><span>Reverse Mortgage</span><span class="fp">$275.00</span></div>
+            <div class="fee-row"><span>Loan Application</span><span class="fp">$150.00</span></div>
+            <div class="fee-row"><span>Cash Deal Mortgage Closings</span><span class="fp">$75.00</span></div>
+            <div class="fee-row"><span>Divorce / General Legal Documents / Power of Attorney, Affidavits, Wills</span><span class="fp">$50.00</span></div>
+            <div class="fee-row"><span>Apostille Needed for Foreign Documents</span><span class="fp">$60.00</span></div>
             <div class="fee-row"><span>Double-sided copy for signer</span><span class="fp">Free</span></div>
-            <div class="fee-row" style="background:rgba(201,168,76,.06);border-radius:4px;padding:.35rem .5rem;"><span style="font-size:.82rem;color:var(--gold);font-weight:700;">Customer provides own prints</span><span class="fp" style="color:var(--gold);">-$10</span></div>
           </div>
           <div class="fee-sec"><div class="fee-hd">Additional Services</div>
-            <div class="fee-row"><span>Witness provided by notary</span><span class="fp">$50</span></div>
+            <div class="fee-row"><span>Witness (up to 3)</span><span class="fp">$50/each</span></div>
             <div class="fee-row"><span>Additional signers (beyond 2)</span><span class="fp">$25/each</span></div>
             <div class="fee-row"><span>Table &amp; 4 chairs</span><span class="fp">Free</span></div>
+            <div class="fee-row"><span>Extra for EDOCS</span><span class="fp">$10.00</span></div>
+            <div class="fee-row"><span>Re-Draw Fee (per document)</span><span class="fp">$25.00</span></div>
+            <div class="fee-row"><span>Scans / Fax-backs / Copies / Print per set (up to 150 pages)</span><span class="fp">$25.00</span></div>
           </div>
           <div class="fee-sec"><div class="fee-hd">Travel &amp; Time</div>
-            <div class="fee-row"><span>Within 20 miles of 42701</span><span class="fp">Included</span></div>
-            <div class="fee-row"><span>Beyond 20 miles</span><span class="fp">$2/mile</span></div>
-            <div class="fee-row"><span>After Hours (8PM&ndash;8AM)</span><span class="fp">+$25</span></div>
-            <div class="fee-row"><span>Sundays</span><span class="fp" style="color:#dc3545;">Closed</span></div>
-            <div class="fee-row"><span>Holidays</span><span class="fp">+$35</span></div>
+            <div class="fee-row"><span>Within 10 miles</span><span class="fp">$40.00 base fee</span></div>
+            <div class="fee-row"><span>Beyond 10 miles</span><span class="fp">+$2.50/mile</span></div>
+            <div class="fee-row"><span>After Hours / Holidays / Sundays (7PM&ndash;2AM)</span><span class="fp">+$25.00</span></div>
           </div>
-          <div class="pol-note"><strong style="display:block;margin-bottom:.3rem;">Policies</strong>Cancellations &lt;5hrs: 75% fee &middot; No-show: full fee &middot; Wait time: 15-min grace then $15+$1/min</div>
+          <div class="pol-note"><strong style="display:block;margin-bottom:.3rem;">Policies</strong>Cancellations &lt;5hrs, no-shows, or refusal to sign: full fee &middot; Wait time: 15-min grace, then $15.00 + $1.00/min (max 16 min without contact)</div>
         </div></div>
       </div>
     </div>
@@ -926,30 +933,31 @@
         <button class="btn btn-gold" style="width:100%;margin-bottom:.75rem;" id="bookLuiggi">Book with Luiggi</button>
         <button class="tog" id="luiggiFeeBtn"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>View Fee Schedule<svg class="ch" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg></button>
         <div class="wrap" id="luiggiFees"><div style="padding:1rem 0;">
-          <div class="fee-sec"><div class="fee-hd">Package &amp; Printing</div>
-            <div class="fee-row"><span>1&ndash;5 pages</span><span class="fp">$50</span></div>
-            <div class="fee-row"><span>6&ndash;25 pages</span><span class="fp">$80</span></div>
-            <div class="fee-row"><span>26&ndash;100 pages</span><span class="fp">$120</span></div>
-            <div class="fee-row"><span>101&ndash;130 pages</span><span class="fp">$140</span></div>
-            <div class="fee-row"><span>131&ndash;150 pages</span><span class="fp">$150</span></div>
-            <div class="fee-row"><span>151+ pages</span><span class="fp">$150 base + $0.50/pg over 150</span></div>
-            <div class="fee-row"><span>Reverse Mortgage</span><span class="fp">$200</span></div>
+          <div class="fee-sec"><div class="fee-hd">Package Type</div>
+            <div class="fee-row"><span>Car Title</span><span class="fp">$40.00</span></div>
+            <div class="fee-row"><span>Seller Package</span><span class="fp">$80.00</span></div>
+            <div class="fee-row"><span>Full Purchase</span><span class="fp">$100.00</span></div>
+            <div class="fee-row"><span>Reverse Mortgage</span><span class="fp">$275.00</span></div>
+            <div class="fee-row"><span>Loan Application</span><span class="fp">$150.00</span></div>
+            <div class="fee-row"><span>Cash Deal Mortgage Closings</span><span class="fp">$75.00</span></div>
+            <div class="fee-row"><span>Divorce / General Legal Documents / Power of Attorney, Affidavits, Wills</span><span class="fp">$50.00</span></div>
+            <div class="fee-row"><span>Apostille Needed for Foreign Documents</span><span class="fp">$60.00</span></div>
             <div class="fee-row"><span>Double-sided copy for signer</span><span class="fp">Free</span></div>
-            <div class="fee-row" style="background:rgba(201,168,76,.06);border-radius:4px;padding:.35rem .5rem;"><span style="font-size:.82rem;color:var(--gold);font-weight:700;">Customer provides own prints</span><span class="fp" style="color:var(--gold);">-$10</span></div>
           </div>
           <div class="fee-sec"><div class="fee-hd">Additional Services</div>
-            <div class="fee-row"><span>Witness provided by notary</span><span class="fp">$50</span></div>
+            <div class="fee-row"><span>Witness (up to 3)</span><span class="fp">$50/each</span></div>
             <div class="fee-row"><span>Additional signers (beyond 2)</span><span class="fp">$25/each</span></div>
             <div class="fee-row"><span>Table &amp; 4 chairs</span><span class="fp">Free</span></div>
+            <div class="fee-row"><span>Extra for EDOCS</span><span class="fp">$10.00</span></div>
+            <div class="fee-row"><span>Re-Draw Fee (per document)</span><span class="fp">$25.00</span></div>
+            <div class="fee-row"><span>Scans / Fax-backs / Copies / Print per set (up to 150 pages)</span><span class="fp">$25.00</span></div>
           </div>
           <div class="fee-sec"><div class="fee-hd">Travel &amp; Time</div>
-            <div class="fee-row"><span>Within 20 miles of 42701</span><span class="fp">Included</span></div>
-            <div class="fee-row"><span>Beyond 20 miles</span><span class="fp">$2/mile</span></div>
-            <div class="fee-row"><span>After Hours (8PM&ndash;8AM)</span><span class="fp">+$25</span></div>
-            <div class="fee-row"><span>Sundays</span><span class="fp" style="color:#dc3545;">Closed</span></div>
-            <div class="fee-row"><span>Holidays</span><span class="fp">+$35</span></div>
+            <div class="fee-row"><span>Within 10 miles</span><span class="fp">$40.00 base fee</span></div>
+            <div class="fee-row"><span>Beyond 10 miles</span><span class="fp">+$2.50/mile</span></div>
+            <div class="fee-row"><span>After Hours / Holidays / Sundays (7PM&ndash;2AM)</span><span class="fp">+$25.00</span></div>
           </div>
-          <div class="pol-note"><strong style="display:block;margin-bottom:.3rem;">Policies</strong>Cancellations &lt;5hrs: 75% fee &middot; No-show: full fee &middot; Wait time: 15-min grace then $15+$1/min</div>
+          <div class="pol-note"><strong style="display:block;margin-bottom:.3rem;">Policies</strong>Cancellations &lt;5hrs, no-shows, or refusal to sign: full fee &middot; Wait time: 15-min grace, then $15.00 + $1.00/min (max 16 min without contact)</div>
         </div></div>
       </div>
     </div>
@@ -992,7 +1000,7 @@
       </details>
       <details style="margin-bottom:1rem;border-bottom:1px solid #ddd;padding-bottom:1rem;">
         <summary style="font-weight:700;cursor:pointer;font-size:1rem;">Do you serve areas outside Hardin County?</summary>
-        <p style="margin-top:.75rem;color:#555;">Yes &mdash; <strong>we serve all of Kentucky, with no distance limit.</strong> We travel most frequently to Bullitt, Nelson, LaRue, Hart, Grayson, Breckinridge, Meade, Jefferson, Spencer, Marion, Taylor, Green, Edmonson, Butler, Ohio, Daviess, Hancock, Washington, and other surrounding counties &mdash; but wherever you are in the state, we can get there. The first 20 miles from 42701 are included; past 20 miles, travel is $2 per mile.</p>
+        <p style="margin-top:.75rem;color:#555;">Yes &mdash; <strong>we serve all of Kentucky, with no distance limit.</strong> We travel most frequently to Bullitt, Nelson, LaRue, Hart, Grayson, Breckinridge, Meade, Jefferson, Spencer, Marion, Taylor, Green, Edmonson, Butler, Ohio, Daviess, Hancock, Washington, and other surrounding counties &mdash; but wherever you are in the state, we can get there. $40.00 within 10 miles, plus $2.00 per mile thereafter.</p>
       </details>
       <details style="margin-bottom:1rem;border-bottom:1px solid #ddd;padding-bottom:1rem;">
         <summary style="font-weight:700;cursor:pointer;font-size:1rem;">Do you offer bilingual (Spanish) notary services?</summary>
@@ -1000,7 +1008,7 @@
       </details>
       <details style="margin-bottom:1rem;border-bottom:1px solid #ddd;padding-bottom:1rem;">
         <summary style="font-weight:700;cursor:pointer;font-size:1rem;">What if I need a notary after business hours or on a holiday?</summary>
-        <p style="margin-top:.75rem;color:#555;">We're available Monday through Saturday including evenings &mdash; we are closed on Sundays. An after-hours surcharge of +$25 applies for appointments between 8PM and 8AM. A +$35 holiday surcharge applies on federal holidays.</p>
+        <p style="margin-top:.75rem;color:#555;">We're available for appointments between 7:00 PM and 2:00 AM, on Sundays, and on federal holidays for a flat +$25 surcharge.</p>
       </details>
     </div>
   </div>
@@ -1019,10 +1027,10 @@
     <div>
       <strong style="display:block;font-size:.9rem;color:var(--navy);margin-bottom:.2rem;">Hours of Operation</strong>
       <span style="font-size:.88rem;color:var(--gray);">Monday &ndash; Saturday &nbsp;&bull;&nbsp; 8:00 AM &ndash; 8:00 PM</span><br/>
-      <span style="font-size:.8rem;color:var(--gray);">After-hours (8PM&ndash;8AM) available with +$25 surcharge &middot; Closed Sundays</span>
+      <span style="font-size:.8rem;color:var(--gray);">After-hours (7PM&ndash;2AM), Sundays, and holidays available with +$25 surcharge</span>
     </div>
   </div>
-  <div><strong>Service Area</strong><p>Based in Elizabethtown, KY (42701). Serving all of Kentucky &mdash; most often Hardin, Bullitt, Nelson, LaRue, Hart, Grayson, Breckinridge, Meade, Jefferson, Spencer, Marion, Taylor, Green, Edmonson, Butler, Ohio, Daviess, Hancock, and Washington counties. First 20 miles included, then $2/mile.</p>
+  <div><strong>Service Area</strong><p>Based in Elizabethtown, KY (42701). Serving all of Kentucky &mdash; most often Hardin, Bullitt, Nelson, LaRue, Hart, Grayson, Breckinridge, Meade, Jefferson, Spencer, Marion, Taylor, Green, Edmonson, Butler, Ohio, Daviess, Hancock, and Washington counties. $40.00 within 10 miles, plus $2.50 per mile thereafter.</p>
 <img src="ky-service-area.png" alt="Kentucky service area map: counties served by Bluegrass Notary LLC" style="width:100%;max-width:700px;border-radius:8px;margin-top:1rem;display:block;" loading="lazy"/></div></div>
     </div>
     <div class="cfw">

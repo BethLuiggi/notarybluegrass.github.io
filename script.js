@@ -30,8 +30,10 @@ var curStep=1;
 
 // Booking state
 var bk={
-  agent:'',notaryPrints:null,pkgFee:0,pkgLabel:'',extraFee:0,
-  signers:2,sigFee:0,witFee:0,ahFee:0,milesFee:0,miles:0,
+  agent:'',pkgFee:0,pkgLabel:'',
+  signers:2,sigFee:0,witCount:0,witFee:0,
+  edocsFee:0,redrawCount:0,redrawFee:0,scansFee:0,
+  ahFee:0,milesFee:0,miles:0,
   prefDate:'',prefTime:'',timeDisplay:'',scheduledTime:'',
   isTitleCo:false,needsLocation:false,milesCalc:false,
   titleFlow:false,promoChoice:null,promoCode:'',
@@ -39,23 +41,15 @@ var bk={
   tSigners:'',tAddr:'',tContact:''
 };
 
-var PKGS_NOTARY=[
-  {fee:50,label:'1-5 pages',extra:false},
-  {fee:80,label:'6-25 pages',extra:false},
-  {fee:120,label:'26-100 pages',extra:false},
-  {fee:140,label:'101-130 pages',extra:false},
-  {fee:150,label:'131-150 pages',extra:false},
-  {fee:200,label:'Reverse Mortgage',extra:false},
-  {fee:150,label:'151 pages and more',extra:true,sub:'$150 base + $0.50 per page over 150'}
-];
-var PKGS_CUSTOMER=[
-  {fee:40,label:'1-5 pages',extra:false},
-  {fee:70,label:'6-25 pages',extra:false},
-  {fee:110,label:'26-100 pages',extra:false},
-  {fee:130,label:'101-130 pages',extra:false},
-  {fee:140,label:'131-150 pages',extra:false},
-  {fee:190,label:'Reverse Mortgage',extra:false},
-  {fee:140,label:'151 pages and more',extra:true,sub:'$140 base + $0.50 per page over 150'}
+var PKG_TYPES=[
+  {fee:40,label:'Car Title'},
+  {fee:80,label:'Seller Package'},
+  {fee:100,label:'Full Purchase'},
+  {fee:275,label:'Reverse Mortgage'},
+  {fee:150,label:'Loan Application'},
+  {fee:75,label:'Cash Deal Mortgage Closings'},
+  {fee:50,label:'Divorce / General Legal Documents / Power of Attorney, Affidavits, Wills'},
+  {fee:60,label:'Apostille Needed for Foreign Documents'}
 ];
 
 // ---- Helpers ----
@@ -97,31 +91,34 @@ function updateProg(){
 }
 
 function calcTotal(){
-  return bk.pkgFee+(bk.extraFee||0)+bk.witFee+bk.sigFee+(bk.milesFee||0)+bk.ahFee;
+  return bk.pkgFee+(bk.edocsFee||0)+(bk.redrawFee||0)+(bk.scansFee||0)+bk.witFee+bk.sigFee+(bk.milesFee||0)+bk.ahFee;
 }
 
 function buildInvoice(id){
-  var lines=[['Package — '+bk.pkgLabel+(bk.notaryPrints?' (Notary prints)':' (Customer prints)'),'$'+bk.pkgFee]];
-  if(bk.extraFee>0)lines.push(['Extra pages over 150 (x $0.50/pg)','+$'+bk.extraFee.toFixed(2)]);
-  if(bk.sigFee>0)lines.push([bk.signers+' signers (×$25 each over 2)','+$'+bk.sigFee]);
-  if(bk.witFee>0)lines.push(['Witness fee','+$50']);
-  if(bk.milesFee>0)lines.push(['Travel fee ('+bk.miles+' mi)','+$'+bk.milesFee]);
-  if(bk.ahFee>0)lines.push([(bk.ahFee===35?'Holiday fee':'After-hours fee'),'+$'+bk.ahFee]);
+  var lines=[['Package — '+bk.pkgLabel,'$'+bk.pkgFee.toFixed(2)]];
+  if(bk.edocsFee>0)lines.push(['Extra for EDOCS','+$'+bk.edocsFee.toFixed(2)]);
+  if(bk.redrawFee>0)lines.push([bk.redrawCount+' re-draw'+(bk.redrawCount>1?'s':'')+' (×$25.00 each)','+$'+bk.redrawFee.toFixed(2)]);
+  if(bk.scansFee>0)lines.push(['Scans / Fax-backs / Copies / Print per set (up to 150 pages)','+$'+bk.scansFee.toFixed(2)]);
+  if(bk.sigFee>0)lines.push([bk.signers+' signers (×$25 each over 2)','+$'+bk.sigFee.toFixed(2)]);
+  if(bk.witFee>0)lines.push([bk.witCount+' witness'+(bk.witCount>1?'es':'')+' (×$50.00 each)','+$'+bk.witFee.toFixed(2)]);
+  if(bk.milesFee>0)lines.push(['Travel fee ('+bk.miles+' mi) — $40.00 base fee (covers up to 10 miles) + $2.50/mile for each additional mile','+$'+bk.milesFee.toFixed(2)]);
+  if(bk.ahFee>0)lines.push(['After-Hours / Holiday / Sunday surcharge','+$'+bk.ahFee.toFixed(2)]);
   var h='<div class="invoice"><div class="inv-header"><div class="inv-logo"><strong style="font-family:Playfair Display,serif;font-size:1.1rem;">Bluegrass Notary LLC</strong></div>';
   var agentDisp=(bk.agent==='beth'?'Beth':(bk.agent==='luiggi'?'Luiggi':'TBD (assigned at scheduling)'));
   h+='<div class="inv-title"><strong>INVOICE</strong><br/>'+bk.timeDisplay+'<br/>Agent: '+agentDisp+'</div></div>';
   lines.forEach(function(l){h+='<div class="inv-row"><span>'+l[0]+'</span><span>'+l[1]+'</span></div>';});
-  h+='<div class="inv-total"><span>Total Due</span><span>$'+calcTotal()+'</span></div>';
+  h+='<div class="inv-total"><span>Total Due</span><span>$'+calcTotal().toFixed(2)+'</span></div>';
   h+='<div style="margin-top:.75rem;font-size:.78rem;color:var(--gray);border-top:1px solid var(--lg);padding-top:.75rem;">';
   h+='<strong>Location:</strong> '+(typeof getSigAddr==='function'?getSigAddr():'')+(bk.sigCounty?', '+bk.sigCounty:'');
   if(bk.needsLocation)h+='<br/><span style="color:#856404;">&#9888; Customer noted no quiet meeting location.</span>';
+  h+='<div style="margin-top:.6rem;">Travel Policy: $40.00 base fee within 10 miles; $2.50/mile thereafter. Wait Time Policy: 15-min grace, then $15.00 + $1.00/min (max 16 min without contact). Cancellation Policy: cancellations &ge;5 hrs are free; under 5 hrs, no-shows, or refusal to sign are charged in full.</div>';
   h+='</div></div>';
   $(id).innerHTML=h;
 }
 
 // ---- Open / Close ----
 function openBooking(agent){
-  bk={agent:agent,notaryPrints:null,pkgFee:0,pkgLabel:'',extraFee:0,signers:2,sigFee:0,witFee:0,ahFee:0,milesFee:0,miles:0,prefDate:'',prefTime:'',timeDisplay:'',scheduledTime:'',isTitleCo:false,needsLocation:false,milesCalc:false,titleFlow:false,promoChoice:null,promoCode:'',tLocType:null,tCounty:'',tFee:0,tOfficeName:'',tSigners:'',tAddr:'',tContact:''};
+  bk={agent:agent,pkgFee:0,pkgLabel:'',signers:2,sigFee:0,witCount:0,witFee:0,edocsFee:0,redrawCount:0,redrawFee:0,scansFee:0,ahFee:0,milesFee:0,miles:0,prefDate:'',prefTime:'',timeDisplay:'',scheduledTime:'',isTitleCo:false,needsLocation:false,milesCalc:false,titleFlow:false,promoChoice:null,promoCode:'',tLocType:null,tCounty:'',tFee:0,tOfficeName:'',tSigners:'',tAddr:'',tContact:''};
   $('bAgentLabel').textContent=(agent==='either')?'Pick whoever\'s available first':('with '+(agent==='beth'?'Beth':'Luiggi'));
   $('bOverlay').classList.add('active');
   document.body.style.overflow='hidden';
@@ -142,8 +139,11 @@ function openBooking(agent){
   if($('tFeePreview')) $('tFeePreview').style.display='none';
   $('tCalEmbed').innerHTML='';
   // Reset step 1
-  $('ro-notary-prints').classList.remove('sel'); $('ro-notary-prints').querySelector('.ro-dot').style.background=''; $('ro-notary-prints').querySelector('.ro-dot').style.borderColor='#ddd';
-  $('ro-customer-prints').classList.remove('sel'); $('ro-customer-prints').querySelector('.ro-dot').style.background=''; $('ro-customer-prints').querySelector('.ro-dot').style.borderColor='#ddd';
+  document.querySelectorAll('.s1opt').forEach(function(r){r.classList.remove('sel');r.querySelector('.ro-dot').style.background='';r.querySelector('.ro-dot').style.borderColor='#ddd';});
+  // Reset step 2
+  $('needsEdocs').checked=false; $('co-edocs').classList.remove('sel');
+  $('needsScans').checked=false; $('co-scans').classList.remove('sel');
+  $('redrawCount').value='0';
   // Reset step 4
   $('prefDate').value=''; $('prefTime').value='';
   var _now=new Date();
@@ -151,7 +151,7 @@ function openBooking(agent){
   $('ahAlert').style.display='none'; $('s4display').style.display='none';
   // Reset step 5
   $('custName').value=''; $('custEmail').value=''; $('custPhone').value='';
-  $('needsWitness').checked=false; $('co-witness').classList.remove('sel');
+  $('witnessCount').value='0';
   $('needsTable').checked=false; $('co-table').classList.remove('sel');
   $('ro-quiet-yes').classList.remove('sel'); $('ro-quiet-yes').querySelector('.ro-dot').style.background=''; $('ro-quiet-yes').querySelector('.ro-dot').style.borderColor='#ddd';
   $('ro-quiet-no').classList.remove('sel'); $('ro-quiet-no').querySelector('.ro-dot').style.background=''; $('ro-quiet-no').querySelector('.ro-dot').style.borderColor='#ddd';
@@ -312,10 +312,11 @@ function selectRo(selectedId, otherId, value){
 
 $('s1options').addEventListener('click',function(e){
   var target=e.target;
-  while(target && target!=$('s1options')){
-    if(target.id==='ro-notary-prints'||target.id==='ro-customer-prints'){
-      if(target.id==='ro-notary-prints') bk.notaryPrints=selectRo('ro-notary-prints','ro-customer-prints',true);
-      else bk.notaryPrints=selectRo('ro-customer-prints','ro-notary-prints',false);
+  while(target&&target!==this){
+    if(target.classList.contains('s1opt')){
+      document.querySelectorAll('.s1opt').forEach(function(r){r.classList.remove('sel');r.querySelector('.ro-dot').style.background='';r.querySelector('.ro-dot').style.borderColor='#ddd';});
+      target.classList.add('sel'); target.querySelector('.ro-dot').style.background='var(--gold)'; target.querySelector('.ro-dot').style.borderColor='var(--gold)';
+      bk.pkgFee=parseFloat(target.getAttribute('data-fee')); bk.pkgLabel=target.getAttribute('data-label');
       return;
     }
     target=target.parentNode;
@@ -323,64 +324,43 @@ $('s1options').addEventListener('click',function(e){
 });
 
 $('s1next').addEventListener('click',function(){
-  if(bk.notaryPrints===null){alert('Please choose who will be printing the package.');return;}
-  buildPkgOptions();
+  if(!bk.pkgLabel){alert('Please select a package type.');return;}
   goStep(2);
 });
 
-// ---- STEP 2 ----
-function buildPkgOptions(){
-  var pkgs=bk.notaryPrints?PKGS_NOTARY:PKGS_CUSTOMER;
-  $('s2label').textContent=bk.notaryPrints?'Select package size (notary prints)':'Select package size (you provide prints — $10 less)';
-  bk.pkgFee=0; bk.pkgLabel=''; bk.extraFee=0;
-  $('s2extra').style.display='none'; $('extraPages').value=''; $('extraResult').textContent='';
-  var html='';
-  pkgs.forEach(function(p,i){
-    var price=p.extra?'$0.50/pg':('$'+p.fee);
-    html+='<div class="ro s2opt" data-idx="'+i+'"><span class="ro-dot"></span><span><span class="ro-label">'+p.label+'</span>'+(p.sub?'<span class="ro-sub">'+p.sub+'</span>':'')+'</span><span class="ro-price">'+price+'</span></div>';
-  });
-  $('s2options').innerHTML=html;
-  // store current pkgs list so the delegated listener below can reference it
-  $('s2options').setAttribute('data-notary',bk.notaryPrints?'1':'0');
-}
-
-$('extraPages').addEventListener('input',function(){
-  var total=parseInt(this.value)||0;
-  if(total<=150){$('extraResult').textContent='Please enter more than 150.';bk.extraFee=0;return;}
-  var over=total-150;
-  bk.extraFee=Math.round(over*0.5*100)/100;
-  $('extraResult').textContent='$150.00 base + '+over+' extra pages x $0.50 = $'+bk.extraFee.toFixed(2)+' extra → Total package: $'+(150+bk.extraFee).toFixed(2);
+// ---- STEP 2 (Add-on services) ----
+$('needsEdocs').addEventListener('change',function(e){
+  e.stopPropagation();
+  bk.edocsFee=this.checked?10:0;
+  $('co-edocs').classList.toggle('sel',this.checked);
 });
-
-// Single static listener for s2options - won't stack on back/forward
-$('s2options').addEventListener('click',function(e){
-  var target=e.target;
-  while(target&&target!==this){
-    if(target.classList.contains('s2opt')){
-      var isNotary=$('s2options').getAttribute('data-notary')==='1';
-      var pkgs=isNotary?PKGS_NOTARY:PKGS_CUSTOMER;
-      document.querySelectorAll('.s2opt').forEach(function(r){r.classList.remove('sel');r.querySelector('.ro-dot').style.background='';r.querySelector('.ro-dot').style.borderColor='#ddd';});
-      target.classList.add('sel'); target.querySelector('.ro-dot').style.background='var(--gold)'; target.querySelector('.ro-dot').style.borderColor='var(--gold)';
-      var idx=parseInt(target.getAttribute('data-idx'));
-      var p=pkgs[idx];
-      bk.pkgFee=p.fee; bk.pkgLabel=p.label; bk.extraFee=0;
-      $('s2extra').style.display=p.extra?'block':'none';
-      if(!p.extra){$('extraPages').value='';$('extraResult').textContent='';}
-      return;
-    }
-    target=target.parentNode;
-  }
+$('co-edocs').addEventListener('click',function(e){
+  if(e.target.tagName==='INPUT') return;
+  e.preventDefault();
+  $('needsEdocs').checked=!$('needsEdocs').checked;
+  bk.edocsFee=$('needsEdocs').checked?10:0;
+  this.classList.toggle('sel',$('needsEdocs').checked);
+});
+$('needsScans').addEventListener('change',function(e){
+  e.stopPropagation();
+  bk.scansFee=this.checked?25:0;
+  $('co-scans').classList.toggle('sel',this.checked);
+});
+$('co-scans').addEventListener('click',function(e){
+  if(e.target.tagName==='INPUT') return;
+  e.preventDefault();
+  $('needsScans').checked=!$('needsScans').checked;
+  bk.scansFee=$('needsScans').checked?25:0;
+  this.classList.toggle('sel',$('needsScans').checked);
+});
+$('redrawCount').addEventListener('input',function(){
+  var n=parseInt(this.value)||0;
+  if(n<0)n=0;
+  bk.redrawCount=n; bk.redrawFee=n*25;
 });
 
 $('s2back').addEventListener('click',function(){goStep(1);});
-$('s2next').addEventListener('click',function(){
-  if(!bk.pkgLabel){alert('Please select a package size.');return;}
-  if($('s2extra').style.display==='block'){
-    var ep=parseInt($('extraPages').value)||0;
-    if(ep<=150){alert('Please enter a total page count greater than 150.');return;}
-  }
-  goStep(bk.notaryPrints?3:4);
-});
+$('s2next').addEventListener('click',function(){goStep(3);});
 
 // ---- STEP 3 ----
 $('s3back').addEventListener('click',function(){goStep(2);});
@@ -403,9 +383,7 @@ function checkDateTime(){
   var todayStr=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
   // Past date check
   if(d<todayStr){showErr('&#x26A0; Please choose a date in the future.');return;}
-  // Sundays — closed (date alone is enough to flag)
   var sd=new Date(d+'T12:00:00');
-  if(sd.getDay()===0){showErr('&#x26A0; We\'re closed on Sundays. Please choose Monday through Saturday.');return;}
   if(!t){$('s4display').style.display='none';$('ahAlert').style.display='none';return;}
   var dt=new Date(d+'T'+t);
   // Past time check (only if date is today)
@@ -415,19 +393,19 @@ function checkDateTime(){
   $('s4display').style.borderColor='var(--gold)';
   $('s4display').style.color='var(--navy)';
   var h=dt.getHours();
-  var isAH=(h>=20||h<8), isHol=(HOLIDAYS.indexOf(d)>=0);
-  bk.ahFee=isHol?35:(isAH?25:0); bk.prefDate=d; bk.prefTime=t;
+  // After-hours/holiday/Sunday window: 7:00 PM (19) through 2:00 AM (before 2)
+  var isAH=(h>=19||h<2), isHol=(HOLIDAYS.indexOf(d)>=0), isSun=(sd.getDay()===0);
+  bk.ahFee=(isAH||isHol||isSun)?25:0; bk.prefDate=d; bk.prefTime=t;
   bk.timeDisplay=dt.toLocaleString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'});
   var tags='';
-  if(isHol) tags+=' <span style="background:#f8d7da;color:#842029;padding:.15rem .45rem;border-radius:4px;font-size:.78rem;">Holiday +$35</span>';
-  else if(isAH) tags+=' <span style="background:#fff3cd;color:#856404;padding:.15rem .45rem;border-radius:4px;font-size:.78rem;">After-Hours +$25</span>';
+  if(bk.ahFee>0) tags+=' <span style="background:#fff3cd;color:#856404;padding:.15rem .45rem;border-radius:4px;font-size:.78rem;">After-Hours/Holiday/Sunday +$25</span>';
   $('s4display').style.display='block';
   $('s4display').innerHTML='&#x2705; <strong>'+bk.timeDisplay+'</strong>'+tags;
   $('ahAlert').style.display=bk.ahFee>0?'block':'none';
 }
 $('prefDate').addEventListener('change',checkDateTime);
 $('prefTime').addEventListener('change',checkDateTime);
-$('s4back').addEventListener('click',function(){goStep(bk.notaryPrints?3:2);});
+$('s4back').addEventListener('click',function(){goStep(3);});
 $('s4next').addEventListener('click',function(){
   if(!bk.prefDate||!bk.prefTime){alert('Please select a date and time.');return;}
   goStep(5);
@@ -457,19 +435,10 @@ $('signerGrid').addEventListener('click',function(e){
   }
 });
 
-// Witness checkbox - use change on input to avoid label double-fire
-$('needsWitness').addEventListener('change',function(e){
-  e.stopPropagation();
-  bk.witFee=this.checked?50:0;
-  $('co-witness').classList.toggle('sel',this.checked);
-});
-$('co-witness').addEventListener('click',function(e){
-  // prevent double-fire if click lands on the input itself
-  if(e.target.tagName==='INPUT') return;
-  e.preventDefault();
-  $('needsWitness').checked=!$('needsWitness').checked;
-  bk.witFee=$('needsWitness').checked?50:0;
-  this.classList.toggle('sel',$('needsWitness').checked);
+// Witness count dropdown (0-3, $50 each)
+$('witnessCount').addEventListener('change',function(){
+  bk.witCount=parseInt(this.value)||0;
+  bk.witFee=bk.witCount*50;
 });
 
 // Table checkbox
@@ -524,8 +493,8 @@ $('calcMilesBtn').addEventListener('click',function(){
   btn.disabled=true; btn.textContent='Calculating...';
   res.innerHTML='<span style="color:var(--gray);font-size:.82rem;">Verifying address...</span>';
 
-  // 3040 Dolphin Dr, Elizabethtown, KY 42701
-  var HOME_LAT=37.703224, HOME_LON=-85.871674;
+  // 620 N Mulberry St, Elizabethtown, KY 42701
+  var HOME_LAT=37.7012195, HOME_LON=-85.8524437;
   var zip5=zip.split('-')[0];
 
   function haversineMi(lat1,lon1,lat2,lon2){
@@ -535,18 +504,18 @@ $('calcMilesBtn').addEventListener('click',function(){
     return 2*R*Math.asin(Math.sqrt(a));
   }
 
-  // No distance cap — we travel anywhere in Kentucky. First 20 miles are
-  // included; every mile past 20 bills at $2/mile, however far that is.
+  // No distance cap — we travel anywhere in Kentucky. $40 base fee covers the
+  // first 10 miles; every mile past 10 bills at $2.50/mile, however far that is.
   function render(mi, isApprox){
     bk.miles=mi; bk.milesCalc=true;
     var tag=isApprox?' <span style="color:var(--gray);font-weight:400;">(estimated)</span>':'';
-    if(mi<=20){
-      bk.milesFee=0;
-      res.innerHTML='<span style="color:var(--green);font-size:.85rem;font-weight:700;">&#x2705; '+mi+' miles'+tag+' &mdash; travel included!</span>';
+    if(mi<=10){
+      bk.milesFee=40;
+      res.innerHTML='<span style="color:var(--green);font-size:.85rem;font-weight:700;">&#x2705; '+mi+' miles'+tag+' &mdash; $40.00 base fee (covers up to 10 miles)</span>';
     } else {
-      var ex=mi-20;
-      bk.milesFee=ex*2;
-      res.innerHTML='<span style="color:#c9a84c;font-size:.85rem;font-weight:700;">&#128205; '+mi+' miles'+tag+' &mdash; '+ex+' beyond 20 = <strong>+$'+bk.milesFee+' travel fee</strong></span>';
+      var ex=mi-10;
+      bk.milesFee=40+ex*2.5;
+      res.innerHTML='<span style="color:#c9a84c;font-size:.85rem;font-weight:700;">&#128205; '+mi+' miles'+tag+' &mdash; '+ex+' mi beyond 10 &times; $2.50/mile + $40.00 base = <strong>$'+bk.milesFee.toFixed(2)+' travel fee</strong></span>';
     }
     btn.disabled=false; btn.textContent='Recalculate';
   }
@@ -668,13 +637,14 @@ $('payBtn').addEventListener('click',async function(){
     signing_state:$('sigState').value.trim(),
     signing_zip:$('sigZip').value.trim(),
     signing_county:sigCounty,
-    notary_prints:bk.notaryPrints, package:bk.pkgLabel,
+    package:bk.pkgLabel,
     signers:bk.signers,
     preferred_time:bk.timeDisplay, scheduled_time:bk.scheduledTime||'',
     document_type:$('docType').value, comments:$('comments').value,
-    witness_needed:bk.witFee>0, needs_table:$('needsTable').checked, needs_location_help:bk.needsLocation,
-    double_sided_copy:$('wantsDbl').checked, miles:bk.miles, travel_fee:'$'+bk.milesFee,
-    after_hours:bk.ahFee>0, total:'$'+calcTotal()
+    witnesses:bk.witCount, needs_table:$('needsTable').checked, needs_location_help:bk.needsLocation,
+    double_sided_copy:$('wantsDbl').checked, edocs:bk.edocsFee>0, redraws:bk.redrawCount,
+    scans:bk.scansFee>0, miles:bk.miles, travel_fee:'$'+bk.milesFee.toFixed(2),
+    after_hours:bk.ahFee>0, total:'$'+calcTotal().toFixed(2)
   };
   function showSuccess(){
     $('successTitle').textContent="You're All Set!";
@@ -835,7 +805,7 @@ function handleCalendlyMessage(e){
       agent:bk.agent,
       scheduled_time:finalTime,
       package:bk.pkgLabel,
-      total:'$'+calcTotal(),
+      total:'$'+calcTotal().toFixed(2),
       meeting_location:sigAddr+(sigCounty?', '+sigCounty+' County':''),
       signing_address:sigAddr,
       signing_county:sigCounty,

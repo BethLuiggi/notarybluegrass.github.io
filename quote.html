@@ -99,28 +99,18 @@
         <input class="bi" type="date" id="qDate"/></div>
     </div>
 
-    <div class="bg"><label class="bl">Who Prints the Documents? <span style="color:#e53e3e;">*</span></label>
-      <select class="bsel" id="qPrints">
-        <option value="notary">Notary prints</option>
-        <option value="customer">I will print myself (save $10)</option>
+    <div class="bg"><label class="bl">Package Type <span style="color:#e53e3e;">*</span></label>
+      <select class="bsel" id="qPackageType">
+        <option value="">-- Select package type --</option>
+        <option value="car-title">Car Title ($40.00)</option>
+        <option value="seller-package">Seller Package ($80.00)</option>
+        <option value="full-purchase">Full Purchase ($100.00)</option>
+        <option value="reverse-mortgage">Reverse Mortgage ($275.00)</option>
+        <option value="loan-application">Loan Application ($150.00)</option>
+        <option value="cash-deal-mortgage">Cash Deal Mortgage Closings ($75.00)</option>
+        <option value="general-legal">Divorce / General Legal Documents / Power of Attorney, Affidavits, Wills ($50.00)</option>
+        <option value="apostille">Apostille Needed for Foreign Documents ($60.00)</option>
       </select>
-    </div>
-
-    <div class="bg"><label class="bl">Package Size <span style="color:#e53e3e;">*</span></label>
-      <select class="bsel" id="qPackage">
-        <option value="1-5">1&ndash;5 pages</option>
-        <option value="6-25">6&ndash;25 pages</option>
-        <option value="26-100">26&ndash;100 pages</option>
-        <option value="101-130">101&ndash;130 pages</option>
-        <option value="131-150">131&ndash;150 pages</option>
-        <option value="reverse">Reverse Mortgage</option>
-        <option value="151+">151+ pages</option>
-      </select>
-    </div>
-
-    <div id="qExtraPagesWrap" style="display:none;">
-      <div class="bg"><label class="bl">Total page count (for 151+)</label>
-        <input class="bi" type="number" id="qExtraPages" min="151" placeholder="e.g. 175"/></div>
     </div>
 
     <div class="q-row">
@@ -134,12 +124,34 @@
           <option value="6">6 (+$100)</option>
         </select>
       </div>
-      <div class="bg"><label class="bl">Witness Needed?</label>
+      <div class="bg"><label class="bl">Witnesses Needed?</label>
         <select class="bsel" id="qWitness">
-          <option value="0">No</option>
-          <option value="1">Yes (+$50)</option>
+          <option value="0">0</option>
+          <option value="1">1 (+$50)</option>
+          <option value="2">2 (+$100)</option>
+          <option value="3">3 (+$150)</option>
         </select>
       </div>
+    </div>
+
+    <div class="q-row">
+      <div class="bg"><label class="bl">Extra for EDOCS?</label>
+        <select class="bsel" id="qEdocs">
+          <option value="0">No</option>
+          <option value="10">Yes (+$10)</option>
+        </select>
+      </div>
+      <div class="bg"><label class="bl">Scans / Fax-backs / Copies / Print per set (up to 150 pages)?</label>
+        <select class="bsel" id="qScans">
+          <option value="0">No</option>
+          <option value="25">Yes (+$25)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="bg"><label class="bl">Re-Draw Fee &mdash; number of documents needing a re-draw</label>
+      <input class="bi" type="number" id="qRedraw" min="0" value="0" placeholder="0"/>
+      <p class="addr-hint">$25.00 per document.</p>
     </div>
 
     <div class="bg"><label class="bl">Signing Address</label>
@@ -150,7 +162,7 @@
     <div class="q-row">
       <div class="bg"><label class="bl">County</label>
         <select class="bsel" id="qCounty">
-          <option value="Hardin">Hardin (no travel fee)</option>
+          <option value="Hardin">Hardin ($40 base travel fee)</option>
           <option value="LaRue">LaRue</option>
           <option value="Nelson">Nelson</option>
           <option value="Hart">Hart</option>
@@ -171,11 +183,10 @@
           <option value="Daviess">Daviess</option>
         </select>
       </div>
-      <div class="bg"><label class="bl">After-Hours or Holiday?</label>
+      <div class="bg"><label class="bl">After Hours / Holiday / Sunday (7PM&ndash;2AM)?</label>
         <select class="bsel" id="qAfterHours">
           <option value="0">No</option>
-          <option value="25">After-hours (8PM&ndash;8AM): +$25</option>
-          <option value="35">Federal holiday: +$35</option>
+          <option value="25">Yes: +$25</option>
         </select>
       </div>
     </div>
@@ -302,17 +313,25 @@
 
 <script>
 // Pricing constants (mirror of script.js — keep in sync if rates change)
-var PKGS_NOTARY={'1-5':[50,'1-5 pages'],'6-25':[80,'6-25 pages'],'26-100':[120,'26-100 pages'],'101-130':[140,'101-130 pages'],'131-150':[150,'131-150 pages'],'reverse':[200,'Reverse Mortgage'],'151+':[150,'151+ pages (base)']};
-var PKGS_CUSTOMER={'1-5':[40,'1-5 pages'],'6-25':[70,'6-25 pages'],'26-100':[110,'26-100 pages'],'101-130':[130,'101-130 pages'],'131-150':[140,'131-150 pages'],'reverse':[190,'Reverse Mortgage'],'151+':[140,'151+ pages (base)']};
+var PKG_TYPES={
+  'car-title':[40,'Car Title'],
+  'seller-package':[80,'Seller Package'],
+  'full-purchase':[100,'Full Purchase'],
+  'reverse-mortgage':[275,'Reverse Mortgage'],
+  'loan-application':[150,'Loan Application'],
+  'cash-deal-mortgage':[75,'Cash Deal Mortgage Closings'],
+  'general-legal':[50,'Divorce / General Legal Documents / Power of Attorney, Affidavits, Wills'],
+  'apostille':[60,'Apostille Needed for Foreign Documents']
+};
 // Approximate one-way miles from Elizabethtown to each county seat (for travel-fee estimation)
 var COUNTY_MILES={Hardin:0,LaRue:16,Nelson:25,Hart:30,Grayson:30,Washington:30,Bullitt:30,Green:35,Marion:35,Taylor:35,Meade:35,Edmonson:40,Breckinridge:40,Ohio:40,Butler:45,Jefferson:45,Spencer:50,Hancock:55,Daviess:60};
 
-// Travel rule: first 20 miles included, then $2/mile. No distance cap.
-var FREE_MILES=20, PER_MILE=2;
-// 3040 Dolphin Dr, Elizabethtown, KY 42701 — same origin as the booking flow.
-var HOME_LAT=37.703224, HOME_LON=-85.871674;
+// Travel rule: $40 base fee covers the first 10 miles, then $2.50/mile beyond that. No distance cap.
+var BASE_FEE=40, FREE_MILES=10, PER_MILE=2.5;
+// 620 N Mulberry St, Elizabethtown, KY 42701 — same origin as the booking flow.
+var HOME_LAT=37.7012195, HOME_LON=-85.8524437;
 
-function travelFeeFor(mi){ return mi>FREE_MILES?(mi-FREE_MILES)*PER_MILE:0; }
+function travelFeeFor(mi){ return BASE_FEE+(mi>FREE_MILES?(mi-FREE_MILES)*PER_MILE:0); }
 
 function haversineMi(lat1,lon1,lat2,lon2){
   var R=3958.8, toRad=Math.PI/180;
@@ -369,9 +388,6 @@ function setMode(m){
 document.getElementById('tab-standard').addEventListener('click',function(){setMode('standard');});
 document.getElementById('tab-title').addEventListener('click',function(){setMode('title');});
 
-document.getElementById('qPackage').addEventListener('change',function(){
-  document.getElementById('qExtraPagesWrap').style.display=this.value==='151+'?'block':'none';
-});
 document.getElementById('qTCLoc').addEventListener('change',function(){
   document.getElementById('qTCCountyWrap').style.display=this.value==='mobile'?'block':'none';
 });
@@ -400,28 +416,24 @@ function fmtDate(s){
 function generateStandard(resolved,addrText,addrFailed){
   var name=el('qName').value.trim()||'(prospective customer)';
   var date=el('qDate').value;
-  var prints=el('qPrints').value;
-  var pkgKey=el('qPackage').value;
-  var pkgs=prints==='notary'?PKGS_NOTARY:PKGS_CUSTOMER;
-  var pkg=pkgs[pkgKey];
+  var pkgKey=el('qPackageType').value;
+  if(!pkgKey){ alert('Please select a package type.'); return false; }
+  var pkg=PKG_TYPES[pkgKey];
   var pkgFee=pkg[0]; var pkgLabel=pkg[1];
-  var extraFee=0, extraNote='';
-  if(pkgKey==='151+'){
-    var total=parseInt(el('qExtraPages').value)||151;
-    if(total>150){
-      extraFee=Math.round((total-150)*0.5*100)/100;
-      extraNote='Extra pages over 150 ('+(total-150)+' × $0.50)';
-    }
-  }
   var signers=parseInt(el('qSigners').value);
   var sigFee=signers>2?(signers-2)*25:0;
-  var witFee=parseInt(el('qWitness').value)?50:0;
+  var witCount=parseInt(el('qWitness').value)||0;
+  var witFee=witCount*50;
+  var edocsFee=parseInt(el('qEdocs').value)||0;
+  var scansFee=parseInt(el('qScans').value)||0;
+  var redrawCount=parseInt(el('qRedraw').value)||0;
+  var redrawFee=redrawCount*25;
   var county=el('qCounty').value;
   var exact=!!resolved;
   var miles=exact?resolved.mi:(COUNTY_MILES[county]||0);
   var travelFee=travelFeeFor(miles);
   var ahFee=parseInt(el('qAfterHours').value)||0;
-  var total=pkgFee+extraFee+sigFee+witFee+travelFee+ahFee;
+  var total=pkgFee+sigFee+witFee+edocsFee+scansFee+redrawFee+travelFee+ahFee;
 
   el('qNum').textContent=quoteNum();
   el('qDateOut').textContent=fmtDate(todayISO());
@@ -429,29 +441,30 @@ function generateStandard(resolved,addrText,addrFailed){
 
   var details='';
   details+=row('Service type','Standard Mobile Notary Signing');
-  details+=row('Package','Package — '+pkgLabel+(prints==='notary'?' (Notary prints)':' (Customer prints — $10 less)'));
+  details+=row('Package type',pkgLabel);
   details+=row('Number of signers',signers.toString());
-  if(witFee>0) details+=row('Witness','Notary to provide a witness');
+  if(witCount>0) details+=row('Witnesses',witCount+' (notary to provide)');
   if(exact) details+=row('Signing address',addrText);
   details+=row('Location',county+' County, Kentucky');
-  if(ahFee>0) details+=row('Timing',ahFee===35?'Federal holiday':'After-hours (8 PM – 8 AM)');
+  if(ahFee>0) details+=row('Timing','After-Hours / Holiday / Sunday (7PM – 2AM)');
   if(date) details+=row('Anticipated date',fmtDate(date));
   el('qDetails').innerHTML=details;
 
   var fees='';
-  fees+=row(pkgLabel+(prints==='customer'?' (you provide prints)':''),fmtUSD(pkgFee));
-  if(extraFee>0) fees+=row(extraNote,fmtUSD(extraFee));
+  fees+=row(pkgLabel,fmtUSD(pkgFee));
+  if(edocsFee>0) fees+=row('Extra for EDOCS',fmtUSD(edocsFee));
+  if(redrawFee>0) fees+=row(redrawCount+' re-draw'+(redrawCount>1?'s':'')+' × $25.00 each',fmtUSD(redrawFee));
+  if(scansFee>0) fees+=row('Scans / Fax-backs / Copies / Print per set (up to 150 pages)',fmtUSD(scansFee));
   if(sigFee>0) fees+=row((signers-2)+' extra signer'+(signers-2>1?'s':'')+' × $25',fmtUSD(sigFee));
-  if(witFee>0) fees+=row('Witness fee',fmtUSD(witFee));
+  if(witFee>0) fees+=row(witCount+' witness'+(witCount>1?'es':'')+' × $50.00 each',fmtUSD(witFee));
+  var travelLabelSuffix='$40.00 base fee (covers up to 10 miles) + $'+PER_MILE.toFixed(2)+'/mile for each additional mile';
   if(exact){
     var basis=resolved.approx?'straight-line estimate':'road distance';
-    if(travelFee>0) fees+=row('Travel fee ('+miles+' mi from 42701 by '+basis+', '+(miles-FREE_MILES)+' mi over '+FREE_MILES+' × $'+PER_MILE+')',fmtUSD(travelFee));
-    else fees+=row('Travel fee ('+miles+' mi from 42701 — within '+FREE_MILES+' mi, included)','$0.00');
+    fees+=row('Travel fee ('+miles+' mi from 42701 by '+basis+') — '+travelLabelSuffix,fmtUSD(travelFee));
   } else {
-    if(travelFee>0) fees+=row('Travel fee — approximate ('+miles+' mi to '+county+' county seat, '+(miles-FREE_MILES)+' mi over '+FREE_MILES+' × $'+PER_MILE+')',fmtUSD(travelFee));
-    else fees+=row('Travel fee ('+county+' — within '+FREE_MILES+' mi of Elizabethtown)','$0.00');
+    fees+=row('Travel fee — approximate ('+miles+' mi to '+county+' county seat) — '+travelLabelSuffix,fmtUSD(travelFee));
   }
-  if(ahFee>0) fees+=row(ahFee===35?'Holiday surcharge':'After-hours surcharge',fmtUSD(ahFee));
+  if(ahFee>0) fees+=row('After-Hours / Holiday / Sunday surcharge',fmtUSD(ahFee));
   el('qFees').innerHTML=fees;
 
   el('qTotal').textContent=fmtUSD(total);
@@ -468,15 +481,17 @@ function generateStandard(resolved,addrText,addrFailed){
       +(addrFailed
         ? 'We could not verify the address you entered, so travel was estimated from the '+county+' County seat instead. '
         : 'No specific signing address was provided, so travel was estimated from the '+county+' County seat. ')
-      +'The travel portion of this total will change once the exact address is known &mdash; the actual fee is calculated by road distance from 42701 ('+FREE_MILES+' miles included, then $'+PER_MILE+'/mile).';
+      +'The travel portion of this total will change once the exact address is known &mdash; the actual fee is calculated by road distance from 42701 ($'+BASE_FEE.toFixed(2)+' base fee covers up to '+FREE_MILES+' miles, then $'+PER_MILE.toFixed(2)+'/mile for each additional mile).';
     note.style.display='block';
   }
 
   el('qFootnote').innerHTML='<strong>Notes:</strong> '
     +(exact
-      ? 'Travel fee is based on '+(resolved.approx?'an estimated':'the')+' driving distance from 42701 to the signing address given above ('+FREE_MILES+' miles included, then $'+PER_MILE+'/mile); it is re-verified at booking. '
+      ? 'Travel fee is based on '+(resolved.approx?'an estimated':'the')+' driving distance from 42701 to the signing address given above ($'+BASE_FEE.toFixed(2)+' base fee covers up to '+FREE_MILES+' miles, then $'+PER_MILE.toFixed(2)+'/mile for each additional mile); it is re-verified at booking. '
       : 'Travel fee shown is an approximate based on driving distance to the county seat; the exact fee is calculated at booking from the precise signing address. ')
-    +'Reverse mortgages and signings with more than 150 pages may incur additional fees. Quote valid for 30 days from date issued.';
+    +'EDOCS, re-draws, scans/copies, witnesses, and extra signers are billed as selected above. Quote valid for 30 days from date issued.'
+    +'<br/><br/><strong>Wait Time Policy:</strong> 15-minute grace period. At 15 minutes, a $15.00 fee is added, plus $1.00 per minute thereafter. Maximum wait time is 16 minutes without client contact before departure.'
+    +'<br/><strong>Cancellation Policy:</strong> Cancellations up to 5 hours prior are free. Cancellations under 5 hours, client no-shows, or refusal to sign will be charged the full amount.';
 }
 
 function generateTitle(){
@@ -532,6 +547,7 @@ document.getElementById('btnGenerate').addEventListener('click',function(){
     if(generateTitle()!==false) showQuote();
     return;
   }
+  if(!el('qPackageType').value){ alert('Please select a package type.'); return; }
   var addr=el('qAddress').value.trim();
   // No address: quote immediately as a flagged estimate. Never blocks.
   if(!addr){
