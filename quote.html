@@ -172,7 +172,7 @@
     <div class="q-row">
       <div class="bg"><label class="bl">County</label>
         <select class="bsel" id="qCounty">
-          <option value="Hardin">Hardin ($40 base travel fee)</option>
+          <option value="Hardin">Hardin (free travel within 10 miles)</option>
           <option value="LaRue">LaRue</option>
           <option value="Nelson">Nelson</option>
           <option value="Hart">Hart</option>
@@ -335,12 +335,13 @@ var PKG_TYPES={
 // Approximate one-way miles from Elizabethtown to each county seat (for travel-fee estimation)
 var COUNTY_MILES={Hardin:0,LaRue:16,Nelson:25,Hart:30,Grayson:30,Washington:30,Bullitt:30,Green:35,Marion:35,Taylor:35,Meade:35,Edmonson:40,Breckinridge:40,Ohio:40,Butler:45,Jefferson:45,Spencer:50,Hancock:55,Daviess:60};
 
-// Travel rule: $40 base fee covers the first 10 miles, then $2.50/mile beyond that. No distance cap.
-var BASE_FEE=40, FREE_MILES=10, PER_MILE=2.5;
+// Travel rule: free within 10 miles, then $2.50/mile for each mile over 10. No distance cap.
+var FREE_MILES=10, PER_MILE=2.5;
 // 620 N Mulberry St, Elizabethtown, KY 42701 — same origin as the booking flow.
 var HOME_LAT=37.7012195, HOME_LON=-85.8524437;
 
-function travelFeeFor(mi){ return BASE_FEE+(mi>FREE_MILES?(mi-FREE_MILES)*PER_MILE:0); }
+function travelFeeFor(mi){ return mi>FREE_MILES?Math.round((mi-FREE_MILES)*PER_MILE*100)/100:0; }
+var TRAVEL_POLICY='Travel within 10 miles of Elizabethtown, KY (124 McCormack Ave) is free; beyond 10 miles, travel is $2.50 per mile for each mile over 10.';
 
 function haversineMi(lat1,lon1,lat2,lon2){
   var R=3958.8, toRad=Math.PI/180;
@@ -467,12 +468,12 @@ function generateStandard(resolved,addrText,addrFailed){
   if(scansFee>0) fees+=row('Scans / Fax Backs / Customer Copies / Re-Prints',fmtUSD(scansFee));
   if(sigFee>0) fees+=row((signers-2)+' extra signer'+(signers-2>1?'s':'')+' × $25',fmtUSD(sigFee));
   if(witFee>0) fees+=row(witCount+' witness'+(witCount>1?'es':'')+' × $50.00 each',fmtUSD(witFee));
-  var travelLabelSuffix='$40.00 base fee (covers up to 10 miles) + $'+PER_MILE.toFixed(2)+'/mile for each additional mile';
-  if(exact){
-    var basis=resolved.approx?'straight-line estimate':'road distance';
-    fees+=row('Travel fee ('+miles+' mi from 42701 by '+basis+') — '+travelLabelSuffix,fmtUSD(travelFee));
+  var travelBasis=exact?(resolved.approx?' — straight-line estimate':''):' — approximate, to '+county+' county seat';
+  if(miles<=FREE_MILES){
+    fees+=row('Travel Fee (within 10 miles of Elizabethtown)'+travelBasis,'Included / Free ($0.00)');
   } else {
-    fees+=row('Travel fee — approximate ('+miles+' mi to '+county+' county seat) — '+travelLabelSuffix,fmtUSD(travelFee));
+    var over=Math.round((miles-FREE_MILES)*10)/10;
+    fees+=row('Travel Fee ('+over+' miles beyond 10-mile local zone @ $'+PER_MILE.toFixed(2)+'/mi)'+travelBasis,fmtUSD(travelFee));
   }
   if(ahFee>0) fees+=row('After-Hours / Holiday / Sunday surcharge',fmtUSD(ahFee));
   el('qFees').innerHTML=fees;
@@ -491,15 +492,15 @@ function generateStandard(resolved,addrText,addrFailed){
       +(addrFailed
         ? 'We could not verify the address you entered, so travel was estimated from the '+county+' County seat instead. '
         : 'No specific signing address was provided, so travel was estimated from the '+county+' County seat. ')
-      +'The travel portion of this total will change once the exact address is known &mdash; the actual fee is calculated by road distance from 42701 ($'+BASE_FEE.toFixed(2)+' base fee covers up to '+FREE_MILES+' miles, then $'+PER_MILE.toFixed(2)+'/mile for each additional mile).';
+      +'The travel portion of this total will change once the exact address is known &mdash; the actual fee is calculated by road distance from 42701 (free within '+FREE_MILES+' miles, then $'+PER_MILE.toFixed(2)+'/mile for each mile over '+FREE_MILES+').';
     note.style.display='block';
   }
 
   el('qFootnote').innerHTML='<strong>Notes:</strong> '
     +(exact
-      ? 'Travel fee is based on '+(resolved.approx?'an estimated':'the')+' driving distance from 42701 to the signing address given above ($'+BASE_FEE.toFixed(2)+' base fee covers up to '+FREE_MILES+' miles, then $'+PER_MILE.toFixed(2)+'/mile for each additional mile); it is re-verified at booking. '
+      ? 'Travel fee is based on '+(resolved.approx?'an estimated':'the')+' driving distance from 42701 to the signing address given above (free within '+FREE_MILES+' miles, then $'+PER_MILE.toFixed(2)+'/mile for each mile over '+FREE_MILES+'); it is re-verified at booking. '
       : 'Travel fee shown is an approximate based on driving distance to the county seat; the exact fee is calculated at booking from the precise signing address. ')
-    +'EDOCS, notary printing, apostilles, scans/re-prints, witnesses, and extra signers are billed as selected above. Quote valid for 30 days from date issued.'
+    +TRAVEL_POLICY+' EDOCS, notary printing, apostilles, scans/re-prints, witnesses, and extra signers are billed as selected above. Quote valid for 30 days from date issued.'
     +'<br/><br/><strong>Wait Time:</strong> I will wait up to 16 min with no contact before leaving. If you need me to wait, please contact me. 15 min wait time, on 15th min, $15 fee added and $1 per min thereafter.'
     +'<br/><strong>Cancellation Policy:</strong> Cancellation up to 5 hours free &ndash; after that the full amount to be charged.'
     +'<br/><strong>No-Show / Refusal Policy:</strong> Client no-show and or refusal to sign &ndash; full amount to be charged.';

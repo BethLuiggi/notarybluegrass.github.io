@@ -91,7 +91,10 @@ function buildInvoice(id){
   if(bk.scansFee>0)lines.push(['Scans / Fax Backs / Customer Copies / Re-Prints','+$'+bk.scansFee.toFixed(2)]);
   if(bk.sigFee>0)lines.push([bk.signers+' signers (×$25 each over 2)','+$'+bk.sigFee.toFixed(2)]);
   if(bk.witFee>0)lines.push([bk.witCount+' witness'+(bk.witCount>1?'es':'')+' (×$50.00 each)','+$'+bk.witFee.toFixed(2)]);
-  if(bk.milesFee>0)lines.push(['Travel fee ('+bk.miles+' mi) — $40.00 base fee (covers up to 10 miles) + $2.50/mile for each additional mile','+$'+bk.milesFee.toFixed(2)]);
+  if(bk.milesCalc){
+    if(bk.miles<=10)lines.push(['Travel Fee (within 10 miles of Elizabethtown)','Included / Free ($0.00)']);
+    else lines.push(['Travel Fee ('+(Math.round((bk.miles-10)*10)/10)+' miles beyond 10-mile local zone @ $2.50/mi)','+$'+bk.milesFee.toFixed(2)]);
+  }
   if(bk.ahFee>0)lines.push(['After-Hours / Holiday / Sunday surcharge','+$'+bk.ahFee.toFixed(2)]);
   var h='<div class="invoice"><div class="inv-header"><div class="inv-logo"><strong style="font-family:Playfair Display,serif;font-size:1.1rem;">Bluegrass Notary LLC</strong></div>';
   var agentDisp=(bk.agent==='beth'?'Beth':(bk.agent==='luiggi'?'Luiggi':'TBD (assigned at scheduling)'));
@@ -101,7 +104,7 @@ function buildInvoice(id){
   h+='<div style="margin-top:.75rem;font-size:.78rem;color:var(--gray);border-top:1px solid var(--lg);padding-top:.75rem;">';
   h+='<strong>Location:</strong> '+(typeof getSigAddr==='function'?getSigAddr():'')+(bk.sigCounty?', '+bk.sigCounty:'');
   if(bk.needsLocation)h+='<br/><span style="color:#856404;">&#9888; Customer noted no quiet meeting location.</span>';
-  h+='<div style="margin-top:.6rem;">Wait Time: I will wait up to 16 min with no contact before leaving. If you need me to wait, please contact me. 15 min wait time, on 15th min, $15 fee added and $1 per min thereafter. Cancellation Policy: Cancellation up to 5 hours free &ndash; after that the full amount to be charged. No-Show / Refusal Policy: Client no-show and or refusal to sign &ndash; full amount to be charged.</div>';
+  h+='<div style="margin-top:.6rem;">Travel Policy: Travel within 10 miles of Elizabethtown, KY (124 McCormack Ave) is free; beyond 10 miles, travel is $2.50 per mile for each mile over 10. Wait Time: I will wait up to 16 min with no contact before leaving. If you need me to wait, please contact me. 15 min wait time, on 15th min, $15 fee added and $1 per min thereafter. Cancellation Policy: Cancellation up to 5 hours free &ndash; after that the full amount to be charged. No-Show / Refusal Policy: Client no-show and or refusal to sign &ndash; full amount to be charged.</div>';
   h+='</div></div>';
   $(id).innerHTML=h;
 }
@@ -514,18 +517,18 @@ $('calcMilesBtn').addEventListener('click',function(){
     return 2*R*Math.asin(Math.sqrt(a));
   }
 
-  // No distance cap — we travel anywhere in Kentucky. $40 base fee covers the
-  // first 10 miles; every mile past 10 bills at $2.50/mile, however far that is.
+  // No distance cap — we travel anywhere in Kentucky. Travel is free within
+  // 10 miles; every mile past 10 bills at $2.50/mile, however far that is.
   function render(mi, isApprox){
     bk.miles=mi; bk.milesCalc=true;
     var tag=isApprox?' <span style="color:var(--gray);font-weight:400;">(estimated)</span>':'';
     if(mi<=10){
-      bk.milesFee=40;
-      res.innerHTML='<span style="color:var(--green);font-size:.85rem;font-weight:700;">&#x2705; '+mi+' miles'+tag+' &mdash; $40.00 base fee (covers up to 10 miles)</span>';
+      bk.milesFee=0;
+      res.innerHTML='<span style="color:var(--green);font-size:.85rem;font-weight:700;">&#x2705; '+mi+' miles'+tag+' &mdash; within 10 miles of Elizabethtown: travel is free ($0.00)</span>';
     } else {
       var ex=mi-10;
-      bk.milesFee=40+ex*2.5;
-      res.innerHTML='<span style="color:#c9a84c;font-size:.85rem;font-weight:700;">&#128205; '+mi+' miles'+tag+' &mdash; '+ex+' mi beyond 10 &times; $2.50/mile + $40.00 base = <strong>$'+bk.milesFee.toFixed(2)+' travel fee</strong></span>';
+      bk.milesFee=Math.round(ex*2.5*100)/100;
+      res.innerHTML='<span style="color:#c9a84c;font-size:.85rem;font-weight:700;">&#128205; '+mi+' miles'+tag+' &mdash; '+ex+' mi beyond 10 &times; $2.50/mile = <strong>$'+bk.milesFee.toFixed(2)+' travel fee</strong></span>';
     }
     btn.disabled=false; btn.textContent='Recalculate';
   }
