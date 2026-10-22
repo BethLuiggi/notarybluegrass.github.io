@@ -32,7 +32,7 @@ var curStep=1;
 var bk={
   agent:'',pkgFee:0,pkgLabel:'',
   signers:2,sigFee:0,witCount:0,witFee:0,
-  edocsFee:0,redrawCount:0,redrawFee:0,scansFee:0,
+  edocsFee:0,notaryPrintFee:0,apostilleFee:0,scansFee:0,
   ahFee:0,milesFee:0,miles:0,
   prefDate:'',prefTime:'',timeDisplay:'',scheduledTime:'',
   isTitleCo:false,needsLocation:false,milesCalc:false,
@@ -40,17 +40,6 @@ var bk={
   tLocType:null,tCounty:'',tFee:0,tOfficeName:'',
   tSigners:'',tAddr:'',tContact:''
 };
-
-var PKG_TYPES=[
-  {fee:40,label:'Car Title'},
-  {fee:80,label:'Seller Package'},
-  {fee:100,label:'Full Purchase'},
-  {fee:275,label:'Reverse Mortgage'},
-  {fee:150,label:'Loan Application'},
-  {fee:75,label:'Cash Deal Mortgage Closings'},
-  {fee:50,label:'Divorce / General Legal Documents / Power of Attorney, Affidavits, Wills'},
-  {fee:60,label:'Apostille Needed for Foreign Documents'}
-];
 
 // ---- Helpers ----
 function $(id){return document.getElementById(id);}
@@ -91,14 +80,15 @@ function updateProg(){
 }
 
 function calcTotal(){
-  return bk.pkgFee+(bk.edocsFee||0)+(bk.redrawFee||0)+(bk.scansFee||0)+bk.witFee+bk.sigFee+(bk.milesFee||0)+bk.ahFee;
+  return bk.pkgFee+(bk.edocsFee||0)+(bk.notaryPrintFee||0)+(bk.apostilleFee||0)+(bk.scansFee||0)+bk.witFee+bk.sigFee+(bk.milesFee||0)+bk.ahFee;
 }
 
 function buildInvoice(id){
   var lines=[['Package — '+bk.pkgLabel,'$'+bk.pkgFee.toFixed(2)]];
   if(bk.edocsFee>0)lines.push(['Extra for EDOCS','+$'+bk.edocsFee.toFixed(2)]);
-  if(bk.redrawFee>0)lines.push([bk.redrawCount+' re-draw'+(bk.redrawCount>1?'s':'')+' (×$25.00 each)','+$'+bk.redrawFee.toFixed(2)]);
-  if(bk.scansFee>0)lines.push(['Scans / Fax-backs / Copies / Print per set (up to 150 pages)','+$'+bk.scansFee.toFixed(2)]);
+  if(bk.notaryPrintFee>0)lines.push(['Notary to Print (emailed to beth@bluegrass-notary.com)','+$'+bk.notaryPrintFee.toFixed(2)]);
+  if(bk.apostilleFee>0)lines.push(['Apostille Needed for Foreign Documents','+$'+bk.apostilleFee.toFixed(2)]);
+  if(bk.scansFee>0)lines.push(['Scans / Fax Backs / Customer Copies / Re-Prints','+$'+bk.scansFee.toFixed(2)]);
   if(bk.sigFee>0)lines.push([bk.signers+' signers (×$25 each over 2)','+$'+bk.sigFee.toFixed(2)]);
   if(bk.witFee>0)lines.push([bk.witCount+' witness'+(bk.witCount>1?'es':'')+' (×$50.00 each)','+$'+bk.witFee.toFixed(2)]);
   if(bk.milesFee>0)lines.push(['Travel fee ('+bk.miles+' mi) — $40.00 base fee (covers up to 10 miles) + $2.50/mile for each additional mile','+$'+bk.milesFee.toFixed(2)]);
@@ -111,14 +101,14 @@ function buildInvoice(id){
   h+='<div style="margin-top:.75rem;font-size:.78rem;color:var(--gray);border-top:1px solid var(--lg);padding-top:.75rem;">';
   h+='<strong>Location:</strong> '+(typeof getSigAddr==='function'?getSigAddr():'')+(bk.sigCounty?', '+bk.sigCounty:'');
   if(bk.needsLocation)h+='<br/><span style="color:#856404;">&#9888; Customer noted no quiet meeting location.</span>';
-  h+='<div style="margin-top:.6rem;">Travel Policy: $40.00 base fee within 10 miles; $2.50/mile thereafter. Wait Time Policy: 15-min grace, then $15.00 + $1.00/min (max 16 min without contact). Cancellation Policy: cancellations &ge;5 hrs are free; under 5 hrs, no-shows, or refusal to sign are charged in full.</div>';
+  h+='<div style="margin-top:.6rem;">Wait Time: I will wait up to 16 min with no contact before leaving. If you need me to wait, please contact me. 15 min wait time, on 15th min, $15 fee added and $1 per min thereafter. Cancellation Policy: Cancellation up to 5 hours free &ndash; after that the full amount to be charged. No-Show / Refusal Policy: Client no-show and or refusal to sign &ndash; full amount to be charged.</div>';
   h+='</div></div>';
   $(id).innerHTML=h;
 }
 
 // ---- Open / Close ----
 function openBooking(agent){
-  bk={agent:agent,pkgFee:0,pkgLabel:'',signers:2,sigFee:0,witCount:0,witFee:0,edocsFee:0,redrawCount:0,redrawFee:0,scansFee:0,ahFee:0,milesFee:0,miles:0,prefDate:'',prefTime:'',timeDisplay:'',scheduledTime:'',isTitleCo:false,needsLocation:false,milesCalc:false,titleFlow:false,promoChoice:null,promoCode:'',tLocType:null,tCounty:'',tFee:0,tOfficeName:'',tSigners:'',tAddr:'',tContact:''};
+  bk={agent:agent,pkgFee:0,pkgLabel:'',signers:2,sigFee:0,witCount:0,witFee:0,edocsFee:0,notaryPrintFee:0,apostilleFee:0,scansFee:0,ahFee:0,milesFee:0,miles:0,prefDate:'',prefTime:'',timeDisplay:'',scheduledTime:'',isTitleCo:false,needsLocation:false,milesCalc:false,titleFlow:false,promoChoice:null,promoCode:'',tLocType:null,tCounty:'',tFee:0,tOfficeName:'',tSigners:'',tAddr:'',tContact:''};
   $('bAgentLabel').textContent=(agent==='either')?'Pick whoever\'s available first':('with '+(agent==='beth'?'Beth':'Luiggi'));
   $('bOverlay').classList.add('active');
   document.body.style.overflow='hidden';
@@ -142,8 +132,9 @@ function openBooking(agent){
   document.querySelectorAll('.s1opt').forEach(function(r){r.classList.remove('sel');r.querySelector('.ro-dot').style.background='';r.querySelector('.ro-dot').style.borderColor='#ddd';});
   // Reset step 2
   $('needsEdocs').checked=false; $('co-edocs').classList.remove('sel');
+  $('needsNotaryPrint').checked=false; $('co-notary-print').classList.remove('sel');
+  $('needsApostille').checked=false; $('co-apostille').classList.remove('sel');
   $('needsScans').checked=false; $('co-scans').classList.remove('sel');
-  $('redrawCount').value='0';
   // Reset step 4
   $('prefDate').value=''; $('prefTime').value='';
   var _now=new Date();
@@ -341,6 +332,30 @@ $('co-edocs').addEventListener('click',function(e){
   bk.edocsFee=$('needsEdocs').checked?10:0;
   this.classList.toggle('sel',$('needsEdocs').checked);
 });
+$('needsNotaryPrint').addEventListener('change',function(e){
+  e.stopPropagation();
+  bk.notaryPrintFee=this.checked?10:0;
+  $('co-notary-print').classList.toggle('sel',this.checked);
+});
+$('co-notary-print').addEventListener('click',function(e){
+  if(e.target.tagName==='INPUT') return;
+  e.preventDefault();
+  $('needsNotaryPrint').checked=!$('needsNotaryPrint').checked;
+  bk.notaryPrintFee=$('needsNotaryPrint').checked?10:0;
+  this.classList.toggle('sel',$('needsNotaryPrint').checked);
+});
+$('needsApostille').addEventListener('change',function(e){
+  e.stopPropagation();
+  bk.apostilleFee=this.checked?60:0;
+  $('co-apostille').classList.toggle('sel',this.checked);
+});
+$('co-apostille').addEventListener('click',function(e){
+  if(e.target.tagName==='INPUT') return;
+  e.preventDefault();
+  $('needsApostille').checked=!$('needsApostille').checked;
+  bk.apostilleFee=$('needsApostille').checked?60:0;
+  this.classList.toggle('sel',$('needsApostille').checked);
+});
 $('needsScans').addEventListener('change',function(e){
   e.stopPropagation();
   bk.scansFee=this.checked?25:0;
@@ -352,11 +367,6 @@ $('co-scans').addEventListener('click',function(e){
   $('needsScans').checked=!$('needsScans').checked;
   bk.scansFee=$('needsScans').checked?25:0;
   this.classList.toggle('sel',$('needsScans').checked);
-});
-$('redrawCount').addEventListener('input',function(){
-  var n=parseInt(this.value)||0;
-  if(n<0)n=0;
-  bk.redrawCount=n; bk.redrawFee=n*25;
 });
 
 $('s2back').addEventListener('click',function(){goStep(1);});
@@ -624,6 +634,7 @@ $('payBtn').addEventListener('click',async function(){
   var bd={
     _subject:'NEW PAID BOOKING - Bluegrass-Notary.com',
     _replyto:agentEmail,
+    important_notice:'**IMPORTANT ID REQUIREMENT** — Every signer must present a valid, non-expired, government-issued photo identification at the time of appointment (such as a Driver\'s License, State ID card, or Passport).',
     agent:bk.agent,
     agent_email:agentEmail,
     notify_also:agentEmail,
@@ -642,8 +653,8 @@ $('payBtn').addEventListener('click',async function(){
     preferred_time:bk.timeDisplay, scheduled_time:bk.scheduledTime||'',
     document_type:$('docType').value, comments:$('comments').value,
     witnesses:bk.witCount, needs_table:$('needsTable').checked, needs_location_help:bk.needsLocation,
-    double_sided_copy:$('wantsDbl').checked, edocs:bk.edocsFee>0, redraws:bk.redrawCount,
-    scans:bk.scansFee>0, miles:bk.miles, travel_fee:'$'+bk.milesFee.toFixed(2),
+    double_sided_copy:$('wantsDbl').checked, edocs:bk.edocsFee>0, notary_print:bk.notaryPrintFee>0,
+    apostille:bk.apostilleFee>0, scans:bk.scansFee>0, miles:bk.miles, travel_fee:'$'+bk.milesFee.toFixed(2),
     after_hours:bk.ahFee>0, total:'$'+calcTotal().toFixed(2)
   };
   function showSuccess(){
@@ -760,6 +771,7 @@ function handleCalendlyMessage(e){
       var tbd={
         _subject:'TITLE COMPANY BOOKING ['+bk.promoCode+'] $'+bk.tFee+' - Bluegrass-Notary.com',
         _replyto:titleAgentEmail,
+        important_notice:'**IMPORTANT ID REQUIREMENT** — Every signer must present a valid, non-expired, government-issued photo identification at the time of appointment (such as a Driver\'s License, State ID card, or Passport).',
         agent:bk.agent,
         agent_email:titleAgentEmail,
         notify_also:titleAgentEmail,

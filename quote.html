@@ -99,17 +99,16 @@
         <input class="bi" type="date" id="qDate"/></div>
     </div>
 
-    <div class="bg"><label class="bl">Package Type <span style="color:#e53e3e;">*</span></label>
+    <div class="bg"><label class="bl">Type of Notarization <span style="color:#e53e3e;">*</span></label>
       <select class="bsel" id="qPackageType">
-        <option value="">-- Select package type --</option>
+        <option value="">-- Select type of notarization --</option>
         <option value="car-title">Car Title ($40.00)</option>
         <option value="seller-package">Seller Package ($80.00)</option>
         <option value="full-purchase">Full Purchase ($100.00)</option>
-        <option value="reverse-mortgage">Reverse Mortgage ($275.00)</option>
+        <option value="reverse-mortgage">Reverse Mtg. ($275.00)</option>
         <option value="loan-application">Loan Application ($150.00)</option>
         <option value="cash-deal-mortgage">Cash Deal Mortgage Closings ($75.00)</option>
-        <option value="general-legal">Divorce / General Legal Documents / Power of Attorney, Affidavits, Wills ($50.00)</option>
-        <option value="apostille">Apostille Needed for Foreign Documents ($60.00)</option>
+        <option value="general-legal">Divorce / General Legal Documents / Power of Attorney, Affidavits, Wills ($70.00)</option>
       </select>
     </div>
 
@@ -141,17 +140,28 @@
           <option value="10">Yes (+$10)</option>
         </select>
       </div>
-      <div class="bg"><label class="bl">Scans / Fax-backs / Copies / Print per set (up to 150 pages)?</label>
+      <div class="bg"><label class="bl">Notary to Print?</label>
+        <select class="bsel" id="qNotaryPrint">
+          <option value="0">No</option>
+          <option value="10">Yes (+$10)</option>
+        </select>
+        <p class="addr-hint">Please email documents to beth&#64;bluegrass-notary.com</p>
+      </div>
+    </div>
+
+    <div class="q-row">
+      <div class="bg"><label class="bl">Apostille Needed for Foreign Documents?</label>
+        <select class="bsel" id="qApostille">
+          <option value="0">No</option>
+          <option value="60">Yes (+$60)</option>
+        </select>
+      </div>
+      <div class="bg"><label class="bl">Scans / Fax Backs / Customer Copies / Re-Prints?</label>
         <select class="bsel" id="qScans">
           <option value="0">No</option>
           <option value="25">Yes (+$25)</option>
         </select>
       </div>
-    </div>
-
-    <div class="bg"><label class="bl">Re-Draw Fee &mdash; number of documents needing a re-draw</label>
-      <input class="bi" type="number" id="qRedraw" min="0" value="0" placeholder="0"/>
-      <p class="addr-hint">$25.00 per document.</p>
     </div>
 
     <div class="bg"><label class="bl">Signing Address</label>
@@ -317,11 +327,10 @@ var PKG_TYPES={
   'car-title':[40,'Car Title'],
   'seller-package':[80,'Seller Package'],
   'full-purchase':[100,'Full Purchase'],
-  'reverse-mortgage':[275,'Reverse Mortgage'],
+  'reverse-mortgage':[275,'Reverse Mtg.'],
   'loan-application':[150,'Loan Application'],
   'cash-deal-mortgage':[75,'Cash Deal Mortgage Closings'],
-  'general-legal':[50,'Divorce / General Legal Documents / Power of Attorney, Affidavits, Wills'],
-  'apostille':[60,'Apostille Needed for Foreign Documents']
+  'general-legal':[70,'Divorce / General Legal Documents / Power of Attorney, Affidavits, Wills']
 };
 // Approximate one-way miles from Elizabethtown to each county seat (for travel-fee estimation)
 var COUNTY_MILES={Hardin:0,LaRue:16,Nelson:25,Hart:30,Grayson:30,Washington:30,Bullitt:30,Green:35,Marion:35,Taylor:35,Meade:35,Edmonson:40,Breckinridge:40,Ohio:40,Butler:45,Jefferson:45,Spencer:50,Hancock:55,Daviess:60};
@@ -417,7 +426,7 @@ function generateStandard(resolved,addrText,addrFailed){
   var name=el('qName').value.trim()||'(prospective customer)';
   var date=el('qDate').value;
   var pkgKey=el('qPackageType').value;
-  if(!pkgKey){ alert('Please select a package type.'); return false; }
+  if(!pkgKey){ alert('Please select a type of notarization.'); return false; }
   var pkg=PKG_TYPES[pkgKey];
   var pkgFee=pkg[0]; var pkgLabel=pkg[1];
   var signers=parseInt(el('qSigners').value);
@@ -425,15 +434,15 @@ function generateStandard(resolved,addrText,addrFailed){
   var witCount=parseInt(el('qWitness').value)||0;
   var witFee=witCount*50;
   var edocsFee=parseInt(el('qEdocs').value)||0;
+  var notaryPrintFee=parseInt(el('qNotaryPrint').value)||0;
+  var apostilleFee=parseInt(el('qApostille').value)||0;
   var scansFee=parseInt(el('qScans').value)||0;
-  var redrawCount=parseInt(el('qRedraw').value)||0;
-  var redrawFee=redrawCount*25;
   var county=el('qCounty').value;
   var exact=!!resolved;
   var miles=exact?resolved.mi:(COUNTY_MILES[county]||0);
   var travelFee=travelFeeFor(miles);
   var ahFee=parseInt(el('qAfterHours').value)||0;
-  var total=pkgFee+sigFee+witFee+edocsFee+scansFee+redrawFee+travelFee+ahFee;
+  var total=pkgFee+sigFee+witFee+edocsFee+notaryPrintFee+apostilleFee+scansFee+travelFee+ahFee;
 
   el('qNum').textContent=quoteNum();
   el('qDateOut').textContent=fmtDate(todayISO());
@@ -441,7 +450,7 @@ function generateStandard(resolved,addrText,addrFailed){
 
   var details='';
   details+=row('Service type','Standard Mobile Notary Signing');
-  details+=row('Package type',pkgLabel);
+  details+=row('Type of notarization',pkgLabel);
   details+=row('Number of signers',signers.toString());
   if(witCount>0) details+=row('Witnesses',witCount+' (notary to provide)');
   if(exact) details+=row('Signing address',addrText);
@@ -453,8 +462,9 @@ function generateStandard(resolved,addrText,addrFailed){
   var fees='';
   fees+=row(pkgLabel,fmtUSD(pkgFee));
   if(edocsFee>0) fees+=row('Extra for EDOCS',fmtUSD(edocsFee));
-  if(redrawFee>0) fees+=row(redrawCount+' re-draw'+(redrawCount>1?'s':'')+' × $25.00 each',fmtUSD(redrawFee));
-  if(scansFee>0) fees+=row('Scans / Fax-backs / Copies / Print per set (up to 150 pages)',fmtUSD(scansFee));
+  if(notaryPrintFee>0) fees+=row('Notary to Print (emailed to beth@bluegrass-notary.com)',fmtUSD(notaryPrintFee));
+  if(apostilleFee>0) fees+=row('Apostille Needed for Foreign Documents',fmtUSD(apostilleFee));
+  if(scansFee>0) fees+=row('Scans / Fax Backs / Customer Copies / Re-Prints',fmtUSD(scansFee));
   if(sigFee>0) fees+=row((signers-2)+' extra signer'+(signers-2>1?'s':'')+' × $25',fmtUSD(sigFee));
   if(witFee>0) fees+=row(witCount+' witness'+(witCount>1?'es':'')+' × $50.00 each',fmtUSD(witFee));
   var travelLabelSuffix='$40.00 base fee (covers up to 10 miles) + $'+PER_MILE.toFixed(2)+'/mile for each additional mile';
@@ -489,9 +499,10 @@ function generateStandard(resolved,addrText,addrFailed){
     +(exact
       ? 'Travel fee is based on '+(resolved.approx?'an estimated':'the')+' driving distance from 42701 to the signing address given above ($'+BASE_FEE.toFixed(2)+' base fee covers up to '+FREE_MILES+' miles, then $'+PER_MILE.toFixed(2)+'/mile for each additional mile); it is re-verified at booking. '
       : 'Travel fee shown is an approximate based on driving distance to the county seat; the exact fee is calculated at booking from the precise signing address. ')
-    +'EDOCS, re-draws, scans/copies, witnesses, and extra signers are billed as selected above. Quote valid for 30 days from date issued.'
-    +'<br/><br/><strong>Wait Time Policy:</strong> 15-minute grace period. At 15 minutes, a $15.00 fee is added, plus $1.00 per minute thereafter. Maximum wait time is 16 minutes without client contact before departure.'
-    +'<br/><strong>Cancellation Policy:</strong> Cancellations up to 5 hours prior are free. Cancellations under 5 hours, client no-shows, or refusal to sign will be charged the full amount.';
+    +'EDOCS, notary printing, apostilles, scans/re-prints, witnesses, and extra signers are billed as selected above. Quote valid for 30 days from date issued.'
+    +'<br/><br/><strong>Wait Time:</strong> I will wait up to 16 min with no contact before leaving. If you need me to wait, please contact me. 15 min wait time, on 15th min, $15 fee added and $1 per min thereafter.'
+    +'<br/><strong>Cancellation Policy:</strong> Cancellation up to 5 hours free &ndash; after that the full amount to be charged.'
+    +'<br/><strong>No-Show / Refusal Policy:</strong> Client no-show and or refusal to sign &ndash; full amount to be charged.';
 }
 
 function generateTitle(){

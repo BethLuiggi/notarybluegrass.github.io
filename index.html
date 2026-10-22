@@ -251,42 +251,46 @@
     <div class="snav" style="margin-top:1rem;"><button class="btn btn-navy" id="tCalBack">&larr; Back</button></div>
   </div>
 
-  <!-- STEP 1: Who prints? -->
+  <!-- STEP 1: Type of notarization -->
   <div class="step" id="s1">
-    <div class="step-title">Step <span>1 of 8</span> &mdash; Package Type</div>
-    <p style="font-size:.9rem;color:var(--gray);margin-bottom:1rem;">Select the type of signing package.</p>
+    <div class="step-title">Step <span>1 of 8</span> &mdash; Type of Notarization</div>
+    <p style="font-size:.9rem;color:var(--gray);margin-bottom:1rem;">Select the type of notarization.</p>
     <div id="s1options">
       <div class="ro s1opt" data-fee="40" data-label="Car Title"><span class="ro-dot"></span><span class="ro-label">Car Title</span><span class="ro-price">$40.00</span></div>
       <div class="ro s1opt" data-fee="80" data-label="Seller Package"><span class="ro-dot"></span><span class="ro-label">Seller Package</span><span class="ro-price">$80.00</span></div>
       <div class="ro s1opt" data-fee="100" data-label="Full Purchase"><span class="ro-dot"></span><span class="ro-label">Full Purchase</span><span class="ro-price">$100.00</span></div>
-      <div class="ro s1opt" data-fee="275" data-label="Reverse Mortgage"><span class="ro-dot"></span><span class="ro-label">Reverse Mortgage</span><span class="ro-price">$275.00</span></div>
+      <div class="ro s1opt" data-fee="275" data-label="Reverse Mtg."><span class="ro-dot"></span><span class="ro-label">Reverse Mtg.</span><span class="ro-price">$275.00</span></div>
       <div class="ro s1opt" data-fee="150" data-label="Loan Application"><span class="ro-dot"></span><span class="ro-label">Loan Application</span><span class="ro-price">$150.00</span></div>
       <div class="ro s1opt" data-fee="75" data-label="Cash Deal Mortgage Closings"><span class="ro-dot"></span><span class="ro-label">Cash Deal Mortgage Closings</span><span class="ro-price">$75.00</span></div>
-      <div class="ro s1opt" data-fee="50" data-label="Divorce / General Legal Documents / Power of Attorney, Affidavits, Wills"><span class="ro-dot"></span><span class="ro-label">Divorce / General Legal Documents / Power of Attorney, Affidavits, Wills</span><span class="ro-price">$50.00</span></div>
-      <div class="ro s1opt" data-fee="60" data-label="Apostille Needed for Foreign Documents"><span class="ro-dot"></span><span class="ro-label">Apostille Needed for Foreign Documents</span><span class="ro-price">$60.00</span></div>
+      <div class="ro s1opt" data-fee="70" data-label="Divorce / General Legal Documents / Power of Attorney, Affidavits, Wills"><span class="ro-dot"></span><span class="ro-label">Divorce / General Legal Documents / Power of Attorney, Affidavits, Wills</span><span class="ro-price">$70.00</span></div>
     </div>
     <div class="snav"><button class="btn btn-gold" id="s1next">Next &rarr;</button></div>
   </div>
 
   <!-- STEP 2: Add-on services -->
   <div class="step" id="s2">
-    <div class="step-title">Step <span>2 of 8</span> &mdash; Add-On Services</div>
-    <p style="font-size:.9rem;color:var(--gray);margin-bottom:1rem;">Optional services &mdash; select any that apply.</p>
+    <div class="step-title">Step <span>2 of 8</span> &mdash; Add-Ons</div>
+    <p style="font-size:.9rem;color:var(--gray);margin-bottom:1rem;">Optional add-ons &mdash; select any that apply.</p>
     <label class="co" id="co-edocs">
       <input type="checkbox" id="needsEdocs" />
       <span><span class="co-label">Extra for EDOCS</span></span>
       <span class="co-price">+$10</span>
     </label>
+    <label class="co" id="co-notary-print">
+      <input type="checkbox" id="needsNotaryPrint" />
+      <span><span class="co-label">Notary to Print</span><span class="co-sub">Please email documents to beth&#64;bluegrass-notary.com</span></span>
+      <span class="co-price">+$10</span>
+    </label>
+    <label class="co" id="co-apostille">
+      <input type="checkbox" id="needsApostille" />
+      <span><span class="co-label">Apostille Needed for Foreign Documents</span></span>
+      <span class="co-price">+$60</span>
+    </label>
     <label class="co" id="co-scans">
       <input type="checkbox" id="needsScans" />
-      <span><span class="co-label">Scans / Fax-backs / Copies / Print per set (up to 150 pages)</span></span>
+      <span><span class="co-label">Scans / Fax Backs / Customer Copies / Re-Prints</span></span>
       <span class="co-price">+$25</span>
     </label>
-    <div class="bg">
-      <label class="bl">Re-Draw Fee &mdash; number of documents needing a re-draw</label>
-      <input class="bi" type="number" id="redrawCount" min="0" value="0" placeholder="0" />
-      <div style="font-size:.78rem;color:var(--gray);margin-top:.3rem;">$25.00 per document.</div>
-    </div>
     <div class="snav">
       <button class="btn btn-navy" id="s2back">&larr; Back</button>
       <button class="btn btn-gold" id="s2next">Next &rarr;</button>
@@ -565,8 +569,9 @@
     <div class="polbox">
       <h4>1. Travel, Wait Time &amp; Cancellations</h4>
       <p><strong>Travel Policy:</strong> $40.00 base fee within 10 miles of our office; $2.50 per mile thereafter.</p>
-      <p><strong>Wait Time Policy:</strong> 15-minute grace period. At 15 minutes, a $15.00 fee is added, plus $1.00 per minute thereafter. Maximum wait time is 16 minutes without client contact before departure.</p>
-      <p><strong>Cancellation Policy:</strong> Cancellations up to 5 hours prior are free. Cancellations under 5 hours, client no-shows, or refusal to sign will be charged the full amount. Re-draws due to lender error are billed at $25.00 per document.</p>
+      <p><strong>Wait Time:</strong> I will wait up to 16 min with no contact before leaving. If you need me to wait, please contact me. 15 min wait time, on 15th min, $15 fee added and $1 per min thereafter.</p>
+      <p><strong>Cancellation Policy:</strong> Cancellation up to 5 hours free &ndash; after that the full amount to be charged.</p>
+      <p><strong>No-Show / Refusal Policy:</strong> Client no-show and or refusal to sign &ndash; full amount to be charged.</p>
       <h4>2. Identification</h4>
       <p>In most cases, signers must present a valid non-expired passport, driver&rsquo;s license, government-issued ID card, or other government-issued ID containing a signature and photograph. If unavailable, verification by oath of a credible witness personally appearing before the notary is an acceptable alternative.</p>
       <h4>3. Signatures</h4>
@@ -727,6 +732,10 @@
     <a href="#contact">Contact</a>
   </div>
 </nav>
+<div class="top-cta">
+  <a href="#either-cta" class="btn btn-gold">Schedule Appointment</a>
+  <a href="quote.html" class="btn btn-outline">Get a Quote</a>
+</div>
 <div class="hero">
   <button class="ron-banner" id="ronHeroBtn" type="button" aria-label="Remote online notarizations available now — see what can be notarized online">
     <span class="dot" aria-hidden="true"></span>
@@ -889,31 +898,38 @@
         <button class="tog green" id="ronInfoBtn"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5A3.375 3.375 0 0010.125 2.25H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>What Can Be Notarized Remotely</button>
         <button class="tog" id="bethFeeBtn"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>View Fee Schedule<svg class="ch" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg></button>
         <div class="wrap" id="bethFees"><div style="padding:1rem 0;">
-          <div class="fee-sec"><div class="fee-hd">Package Type</div>
+          <div class="fee-sec"><div class="fee-hd">Type of Notarization</div>
             <div class="fee-row"><span>Car Title</span><span class="fp">$40.00</span></div>
             <div class="fee-row"><span>Seller Package</span><span class="fp">$80.00</span></div>
             <div class="fee-row"><span>Full Purchase</span><span class="fp">$100.00</span></div>
-            <div class="fee-row"><span>Reverse Mortgage</span><span class="fp">$275.00</span></div>
+            <div class="fee-row"><span>Reverse Mtg.</span><span class="fp">$275.00</span></div>
             <div class="fee-row"><span>Loan Application</span><span class="fp">$150.00</span></div>
             <div class="fee-row"><span>Cash Deal Mortgage Closings</span><span class="fp">$75.00</span></div>
-            <div class="fee-row"><span>Divorce / General Legal Documents / Power of Attorney, Affidavits, Wills</span><span class="fp">$50.00</span></div>
-            <div class="fee-row"><span>Apostille Needed for Foreign Documents</span><span class="fp">$60.00</span></div>
+            <div class="fee-row"><span>Divorce / General Legal Documents / Power of Attorney, Affidavits, Wills</span><span class="fp">$70.00</span></div>
             <div class="fee-row"><span>Double-sided copy for signer</span><span class="fp">Free</span></div>
           </div>
-          <div class="fee-sec"><div class="fee-hd">Additional Services</div>
-            <div class="fee-row"><span>Witness (up to 3)</span><span class="fp">$50/each</span></div>
-            <div class="fee-row"><span>Additional signers (beyond 2)</span><span class="fp">$25/each</span></div>
-            <div class="fee-row"><span>Table &amp; 4 chairs</span><span class="fp">Free</span></div>
+          <div class="fee-sec"><div class="fee-hd">Add-ons</div>
+            <div class="fee-row"><span>Additional signers (beyond 2)</span><span class="fp">$25.00/each</span></div>
             <div class="fee-row"><span>Extra for EDOCS</span><span class="fp">$10.00</span></div>
-            <div class="fee-row"><span>Re-Draw Fee (per document)</span><span class="fp">$25.00</span></div>
-            <div class="fee-row"><span>Scans / Fax-backs / Copies / Print per set (up to 150 pages)</span><span class="fp">$25.00</span></div>
+            <div class="fee-row"><span>Notary to Print (emailed to beth@bluegrass-notary.com)</span><span class="fp">$10.00</span></div>
+            <div class="fee-row"><span>Apostille Needed for Foreign Documents</span><span class="fp">$60.00</span></div>
+            <div class="fee-row"><span>Witness (0&ndash;3 needed)</span><span class="fp">$50.00/each</span></div>
+            <div class="fee-row"><span>Scans / Fax Backs / Customer Copies / Re-Prints</span><span class="fp">$25.00</span></div>
+            <div class="fee-row"><span>After Hours / Holidays / Sundays (7PM&ndash;2AM)</span><span class="fp">$25.00</span></div>
+            <div class="fee-row"><span>Table &amp; 4 chairs</span><span class="fp">Free</span></div>
           </div>
           <div class="fee-sec"><div class="fee-hd">Travel &amp; Time</div>
             <div class="fee-row"><span>Within 10 miles</span><span class="fp">$40.00 base fee</span></div>
             <div class="fee-row"><span>Beyond 10 miles</span><span class="fp">+$2.50/mile</span></div>
-            <div class="fee-row"><span>After Hours / Holidays / Sundays (7PM&ndash;2AM)</span><span class="fp">+$25.00</span></div>
           </div>
-          <div class="pol-note"><strong style="display:block;margin-bottom:.3rem;">Policies</strong>Cancellations &lt;5hrs, no-shows, or refusal to sign: full fee &middot; Wait time: 15-min grace, then $15.00 + $1.00/min (max 16 min without contact)</div>
+          <div class="fee-sec"><div class="fee-hd">After Appointment Fees</div>
+            <div class="fee-row"><span>Re-prints</span><span class="fp">$25.00</span></div>
+          </div>
+          <div class="pol-note"><strong style="display:block;margin-bottom:.3rem;">Policies</strong>
+            <strong>Cancellation:</strong> Cancellation up to 5 hours free &ndash; after that the full amount to be charged.<br/>
+            <strong>No-Show / Refusal:</strong> Client no-show and or refusal to sign &ndash; full amount to be charged.<br/>
+            <strong>Wait Time:</strong> I will wait up to 16 min with no contact before leaving. If you need me to wait, please contact me. 15 min wait time, on 15th min, $15 fee added and $1 per min thereafter.
+          </div>
         </div></div>
       </div>
     </div>
@@ -933,31 +949,38 @@
         <button class="btn btn-gold" style="width:100%;margin-bottom:.75rem;" id="bookLuiggi">Book with Luiggi</button>
         <button class="tog" id="luiggiFeeBtn"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>View Fee Schedule<svg class="ch" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg></button>
         <div class="wrap" id="luiggiFees"><div style="padding:1rem 0;">
-          <div class="fee-sec"><div class="fee-hd">Package Type</div>
+          <div class="fee-sec"><div class="fee-hd">Type of Notarization</div>
             <div class="fee-row"><span>Car Title</span><span class="fp">$40.00</span></div>
             <div class="fee-row"><span>Seller Package</span><span class="fp">$80.00</span></div>
             <div class="fee-row"><span>Full Purchase</span><span class="fp">$100.00</span></div>
-            <div class="fee-row"><span>Reverse Mortgage</span><span class="fp">$275.00</span></div>
+            <div class="fee-row"><span>Reverse Mtg.</span><span class="fp">$275.00</span></div>
             <div class="fee-row"><span>Loan Application</span><span class="fp">$150.00</span></div>
             <div class="fee-row"><span>Cash Deal Mortgage Closings</span><span class="fp">$75.00</span></div>
-            <div class="fee-row"><span>Divorce / General Legal Documents / Power of Attorney, Affidavits, Wills</span><span class="fp">$50.00</span></div>
-            <div class="fee-row"><span>Apostille Needed for Foreign Documents</span><span class="fp">$60.00</span></div>
+            <div class="fee-row"><span>Divorce / General Legal Documents / Power of Attorney, Affidavits, Wills</span><span class="fp">$70.00</span></div>
             <div class="fee-row"><span>Double-sided copy for signer</span><span class="fp">Free</span></div>
           </div>
-          <div class="fee-sec"><div class="fee-hd">Additional Services</div>
-            <div class="fee-row"><span>Witness (up to 3)</span><span class="fp">$50/each</span></div>
-            <div class="fee-row"><span>Additional signers (beyond 2)</span><span class="fp">$25/each</span></div>
-            <div class="fee-row"><span>Table &amp; 4 chairs</span><span class="fp">Free</span></div>
+          <div class="fee-sec"><div class="fee-hd">Add-ons</div>
+            <div class="fee-row"><span>Additional signers (beyond 2)</span><span class="fp">$25.00/each</span></div>
             <div class="fee-row"><span>Extra for EDOCS</span><span class="fp">$10.00</span></div>
-            <div class="fee-row"><span>Re-Draw Fee (per document)</span><span class="fp">$25.00</span></div>
-            <div class="fee-row"><span>Scans / Fax-backs / Copies / Print per set (up to 150 pages)</span><span class="fp">$25.00</span></div>
+            <div class="fee-row"><span>Notary to Print (emailed to beth@bluegrass-notary.com)</span><span class="fp">$10.00</span></div>
+            <div class="fee-row"><span>Apostille Needed for Foreign Documents</span><span class="fp">$60.00</span></div>
+            <div class="fee-row"><span>Witness (0&ndash;3 needed)</span><span class="fp">$50.00/each</span></div>
+            <div class="fee-row"><span>Scans / Fax Backs / Customer Copies / Re-Prints</span><span class="fp">$25.00</span></div>
+            <div class="fee-row"><span>After Hours / Holidays / Sundays (7PM&ndash;2AM)</span><span class="fp">$25.00</span></div>
+            <div class="fee-row"><span>Table &amp; 4 chairs</span><span class="fp">Free</span></div>
           </div>
           <div class="fee-sec"><div class="fee-hd">Travel &amp; Time</div>
             <div class="fee-row"><span>Within 10 miles</span><span class="fp">$40.00 base fee</span></div>
             <div class="fee-row"><span>Beyond 10 miles</span><span class="fp">+$2.50/mile</span></div>
-            <div class="fee-row"><span>After Hours / Holidays / Sundays (7PM&ndash;2AM)</span><span class="fp">+$25.00</span></div>
           </div>
-          <div class="pol-note"><strong style="display:block;margin-bottom:.3rem;">Policies</strong>Cancellations &lt;5hrs, no-shows, or refusal to sign: full fee &middot; Wait time: 15-min grace, then $15.00 + $1.00/min (max 16 min without contact)</div>
+          <div class="fee-sec"><div class="fee-hd">After Appointment Fees</div>
+            <div class="fee-row"><span>Re-prints</span><span class="fp">$25.00</span></div>
+          </div>
+          <div class="pol-note"><strong style="display:block;margin-bottom:.3rem;">Policies</strong>
+            <strong>Cancellation:</strong> Cancellation up to 5 hours free &ndash; after that the full amount to be charged.<br/>
+            <strong>No-Show / Refusal:</strong> Client no-show and or refusal to sign &ndash; full amount to be charged.<br/>
+            <strong>Wait Time:</strong> I will wait up to 16 min with no contact before leaving. If you need me to wait, please contact me. 15 min wait time, on 15th min, $15 fee added and $1 per min thereafter.
+          </div>
         </div></div>
       </div>
     </div>
