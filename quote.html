@@ -193,7 +193,7 @@
           <option value="Daviess">Daviess</option>
         </select>
       </div>
-      <div class="bg"><label class="bl">After Hours / Holiday / Sunday (7PM&ndash;2AM)?</label>
+      <div class="bg"><label class="bl">After Hours / Holiday / Sunday (6PM&ndash;2AM)?</label>
         <select class="bsel" id="qAfterHours">
           <option value="0">No</option>
           <option value="25">Yes: +$25</option>
@@ -456,7 +456,7 @@ function generateStandard(resolved,addrText,addrFailed){
   if(witCount>0) details+=row('Witnesses',witCount+' (notary to provide)');
   if(exact) details+=row('Signing address',addrText);
   details+=row('Location',county+' County, Kentucky');
-  if(ahFee>0) details+=row('Timing','After-Hours / Holiday / Sunday (7PM – 2AM)');
+  if(ahFee>0) details+=row('Timing','After-Hours / Holiday / Sunday (6PM – 2AM)');
   if(date) details+=row('Anticipated date',fmtDate(date));
   el('qDetails').innerHTML=details;
 

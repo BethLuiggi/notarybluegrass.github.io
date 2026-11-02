@@ -406,8 +406,8 @@ function checkDateTime(){
   $('s4display').style.borderColor='var(--gold)';
   $('s4display').style.color='var(--navy)';
   var h=dt.getHours();
-  // After-hours/holiday/Sunday window: 7:00 PM (19) through 2:00 AM (before 2)
-  var isAH=(h>=19||h<2), isHol=(HOLIDAYS.indexOf(d)>=0), isSun=(sd.getDay()===0);
+  // After-hours/holiday/Sunday window: 6:00 PM (18) through 2:00 AM (before 2)
+  var isAH=(h>=18||h<2), isHol=(HOLIDAYS.indexOf(d)>=0), isSun=(sd.getDay()===0);
   bk.ahFee=(isAH||isHol||isSun)?25:0; bk.prefDate=d; bk.prefTime=t;
   bk.timeDisplay=dt.toLocaleString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'});
   var tags='';
